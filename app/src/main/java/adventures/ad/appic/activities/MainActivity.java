@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import aventures.ad.appic.app.R;
+import com.wikitude.architect.ArchitectView;
+
+import adventures.ad.appic.app.R;
+import adventures.ad.appic.custom.MessageBox;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -13,7 +16,14 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        if(ArchitectView.isDeviceSupported(this)) {
+            setContentView(R.layout.activity_main);
+        }else{
+            new MessageBox("Device Error","Your Device is not Supported", MessageBox.Type.ERROR_BOX,this).popMessage();
+        }
+
+
     }
 
 
@@ -32,8 +42,8 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_exit) {
+            System.exit(0);
         }
 
         return super.onOptionsItemSelected(item);
