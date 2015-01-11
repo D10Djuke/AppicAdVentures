@@ -3,7 +3,12 @@
 
     <string name="app_name">AppicAdVentures</string>
     <string name="action_settings">Settings</string>
-    <string name="action_account">Account</string>
     <string name="action_exit">Exit</string>
+    <string name="def_news">No new news</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_inventory">Inventory</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="defaultString">Get coding</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package adventures.ad.appic.custom;
+package adventures.ad.appic.main.custom;
 
 import android.app.AlertDialog;
 import android.content.Context;
