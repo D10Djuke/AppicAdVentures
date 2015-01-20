@@ -73,5 +73,7 @@
         android:layout_alignLeft="@+id/soundTextView"
         android:layout_alignStart="@+id/soundTextView"
         android:layout_toLeftOf="@+id/musicSwitch"
-        android:layout_toStartOf="@+id/musicSwitch" />
+        android:layout_toStartOf="@+id/musicSwitch"
+        android:textColor="#da3b3b3b"
+        android:textStyle="normal|bold" />
 </RelativeLayout>
