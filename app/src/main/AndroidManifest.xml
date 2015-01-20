@@ -107,7 +107,7 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
             </intent-filter>
         </activity>
         <activity
-            android:name="adventures.ad.appic.main.activities.Settings"
+            android:name="adventures.ad.appic.main.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

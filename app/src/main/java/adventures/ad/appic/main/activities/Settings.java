@@ -31,8 +31,8 @@ public class Settings extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
 
-        TextView t = ((TextView)(findViewById(R.id.testText)));
-        t.setText(c.getTestText());
+        //TextView t = ((TextView)(findViewById(R.id.testText)));
+        //t.setText(c.getTestText());
 
         return true;
     }
