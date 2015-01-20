@@ -2,11 +2,15 @@ package adventures.ad.appic.main.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationListener;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,14 +25,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     private GoogleMap mMap = null; // Might be null if Google Play services APK is not available.
     private ArrayList<Marker> markers = new ArrayList<Marker>();
     private LocationManager locationManager;
-    // private Location myLocation;
 
-    public void msbox() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("Packing List");
-        alertDialog.setMessage("Could not find the file.");
-        alertDialog.show();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +33,35 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         setContentView(R.layout.activity_map);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        // myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         setUpMapIfNeeded();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_map, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if(id == R.id.action_settings){
+            Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(i);
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_back) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

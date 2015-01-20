@@ -4,6 +4,7 @@
     <string name="app_name">AppicAdVentures</string>
     <string name="action_settings">Settings</string>
     <string name="action_exit">Exit</string>
+    <string name="action_back">Back</string>
     <string name="def_news">No new news</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
