@@ -32,11 +32,12 @@ public class SettingsActivity extends ActionBarActivity {
 
             setContentView(R.layout.activity_settings);
 
-            ((Switch) findViewById(R.id.musicSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            ((Switch) findViewById(R.id.soundSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Log.v("Switch State=", "" + isChecked);
+                    //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 }
 
             });
