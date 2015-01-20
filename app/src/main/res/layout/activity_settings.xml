@@ -63,4 +63,15 @@
         android:layout_alignBottom="@+id/musicSwitch"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GPS Settings"
+        android:id="@+id/GPSButton"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/soundTextView"
+        android:layout_alignStart="@+id/soundTextView"
+        android:layout_toLeftOf="@+id/musicSwitch"
+        android:layout_toStartOf="@+id/musicSwitch" />
 </RelativeLayout>

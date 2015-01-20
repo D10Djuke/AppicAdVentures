@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -37,7 +38,6 @@ public class SettingsActivity extends ActionBarActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Log.v("Switch State=", "" + isChecked);
-                    //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 }
 
             });
@@ -71,6 +71,14 @@ public class SettingsActivity extends ActionBarActivity {
                     else {
                         ((Switch) findViewById(R.id.musicSwitch)).setChecked(true);
                     }
+                }
+            });
+
+            ((Button)findViewById(R.id.GPSButton)).setOnClickListener(new Button.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 }
             });
         }
