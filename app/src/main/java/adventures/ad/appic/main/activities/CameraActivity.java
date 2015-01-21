@@ -68,7 +68,7 @@ public class CameraActivity extends FragmentActivity {
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             return "21";
         } else {
-            return "null";
+            return "geen api";
         }
 
 
