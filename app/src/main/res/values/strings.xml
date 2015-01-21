@@ -11,5 +11,6 @@
     <string name="title_activity_inventory">Inventory</string>
     <string name="title_activity_settings">Settings</string>
     <string name="defaultString">Get coding</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

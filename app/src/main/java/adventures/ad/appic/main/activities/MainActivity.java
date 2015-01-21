@@ -1,13 +1,13 @@
 package adventures.ad.appic.main.activities;
 
-import android.app.Fragment;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.wikitude.architect.ArchitectView;
@@ -51,8 +51,7 @@ public class MainActivity extends ActionBarActivity {
             ((TextView) findViewById(R.id.cam)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), CameraActivity.class);
-                    startActivity(i);
+                        startAugmentedReality();
                 }
             });
 
@@ -62,6 +61,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
 
+    }
+
+    private synchronized void startAugmentedReality(){
+        Intent i = new Intent(getApplicationContext(), CameraActivity.class);
+        startActivity(i);
     }
 
 

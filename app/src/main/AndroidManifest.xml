@@ -95,11 +95,17 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
         </activity>
         <activity
             android:name="adventures.ad.appic.main.activities.CameraActivity"
-            android:label="@string/title_activity_camera" >
+            android:label="@string/title_activity_camera"
+            android:configChanges="screenSize|orientation" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="adventures.ad.appic.main.activities.InventoryActivity"
-            android:label="@string/title_activity_inventory" >
+            android:label="@string/title_activity_inventory">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
