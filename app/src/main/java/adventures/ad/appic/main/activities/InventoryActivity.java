@@ -5,15 +5,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.web.Connection;
 
 public class InventoryActivity extends ActionBarActivity {
+
+    private Connection c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
+        Connection c = new Connection(getApplicationContext());
+        c.readService();
+        TextView t = (TextView) findViewById(R.id.testText);
+        t.setText(c.getTestText());
     }
 
 

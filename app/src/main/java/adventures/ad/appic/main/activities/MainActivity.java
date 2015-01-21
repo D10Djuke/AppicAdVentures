@@ -48,6 +48,14 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
+            ((TextView) findViewById(R.id.cam)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), CameraActivity.class);
+                    startActivity(i);
+                }
+            });
+
 
         }else{
             new MessageBox("Device Error","Your Device is not Supported", MessageBox.Type.ERROR_BOX,this).popMessage();

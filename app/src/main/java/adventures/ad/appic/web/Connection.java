@@ -28,13 +28,14 @@ import adventures.ad.appic.main.custom.MessageBox;
  */
 public class Connection {
 
-    String serverURL = "http://85.151.202.128:550/appic/connect.php";
+    String localURL = "mickelmac.local/appic/connect.php?action=get&object=user";
+    String serverURL = "http://85.151.202.128:550/appic/connect.php?action=get&object=user";
     String url = "https://bugzilla.mozilla.org/rest/bug?assigned_to=lhenry@mozilla.com";
     String input;
 
     public Connection(Context context){
 
-        input = readBugzilla();
+        input = readService();
 
     }
 
@@ -50,10 +51,10 @@ public class Connection {
     }
 
 
-    public String readBugzilla() {
+    public String readService() {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("https://bugzilla.mozilla.org/rest/bug?assigned_to=lhenry@mozilla.com");
+        HttpGet httpGet = new HttpGet(localURL);
         try {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
