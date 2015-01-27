@@ -1,18 +1,33 @@
 package adventures.ad.appic.game;
 
+import android.content.Context;
+
+import adventures.ad.appic.manager.DataManager;
+
 /**
  * Created by 11305205 on 10/01/2015.
  */
 public class Account {
 
-    private Character myCharacter;
+    private Player myCharacter;
+    private DataManager dataM;
 
-    public Account(){
-        myCharacter = new Character();
+    public Account(Context c){
+        dataM = new DataManager(c);
     }
 
-    public Character getCharacter(){
+    public Player getCharacter(){
         return myCharacter;
+    }
+
+
+
+    private void newCharacter(){
+
+    }
+
+    private void loadCharacter(){
+
     }
 
 }

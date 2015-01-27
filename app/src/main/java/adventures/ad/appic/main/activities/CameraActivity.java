@@ -3,10 +3,10 @@ package adventures.ad.appic.main.activities;
 
 
 import android.hardware.Camera;
+import android.hardware.camera2.CameraDevice;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.wikitude.architect.ArchitectView;
 
@@ -63,7 +63,9 @@ public class CameraActivity extends FragmentActivity {
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
                 && ((Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP))) {
-            return Integer.toString(Camera.getNumberOfCameras());
+
+            StringBuilder sB = new StringBuilder();
+            return sB.toString();
 
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             return "21";

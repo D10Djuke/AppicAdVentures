@@ -1,38 +1,26 @@
 package adventures.ad.appic.game;
 
 /**
- * Created by 11305205 on 10/01/2015.
+ * Created by Jory on 25/01/2015.
  */
-public class Character {
+public interface Character {
 
-    private String name = "Guido";
-    private int level = 1;
+    String characterName = "default";
+    int baseHitPoints = 0;
+    int baseManaPoits = 0;
 
-    public Character(){
+    int baseStrength = 10;
+    int baseIntelligence = 10;
+    int baseWillPower = 10;
+    int baseWisdom = 10;
+    int baseSpirit = 10;
+    int baseSpeed = 10;
+    int baseAgility = 10;
+    int baseEvasion = 10;
+    int baseAccuracy = 10;
+    int baseLuck = 10;
 
-    }
+    abstract void takeDamage();
+    abstract void dealDamage();
 
-    public Character(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public int getLevelAsNumber(){
-        return level;
-    }
-
-    public String getLevelAsText(){
-        return "Level " + level;
-    }
-
-    public void levelUp(){
-        level++;
-    }
-
-    public void changeName(String name){
-        this.name = name;
-    }
 }

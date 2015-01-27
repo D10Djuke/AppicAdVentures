@@ -2,6 +2,7 @@ package adventures.ad.appic.main.activities;
 
 
 import android.content.Intent;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,7 +20,7 @@ import adventures.ad.appic.main.custom.MessageBox;
 
 public class MainActivity extends ActionBarActivity {
 
-    private Account myAccount = new Account();
+    //private Account myAccount = new Account(getApplicationContext());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,8 @@ public class MainActivity extends ActionBarActivity {
 
             setContentView(R.layout.activity_main);
 
-            ((TextView) findViewById(R.id.charName)).setText(myAccount.getCharacter().getName());
-            ((TextView) findViewById(R.id.charLvl)).setText(myAccount.getCharacter().getLevelAsText());
+            //((TextView) findViewById(R.id.charName)).setText(myAccount.getCharacter().getName());
+            //((TextView) findViewById(R.id.charLvl)).setText(myAccount.getCharacter().getLevelAsText());
 
             ((TextView) findViewById(R.id.inventory)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -59,13 +60,38 @@ public class MainActivity extends ActionBarActivity {
         }else{
             new MessageBox("Device Error","Your Device is not Supported", MessageBox.Type.ERROR_BOX,this).popMessage();
         }
-
-
     }
 
     private synchronized void startAugmentedReality(){
-        Intent i = new Intent(getApplicationContext(), CameraActivity.class);
-        startActivity(i);
+
+        int cameraId = -1;
+
+        for(int i = 0; i < Camera.getNumberOfCameras();i++){
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if(info.facing == Camera.CameraInfo.CAMERA_FACING_BACK){
+                cameraId = i;
+            }
+        }
+
+        if(isCameraInUsebyApp(cameraId)){
+            new MessageBox("CameraError", "Your Camera is already in use", MessageBox.Type.ERROR_BOX, this);
+        }else{
+            Intent i = new Intent(getApplicationContext(), CameraActivity.class);
+            startActivity(i);
+        }
+    }
+
+    private boolean isCameraInUsebyApp(int cameraId) {
+        Camera camera = null;
+        try {
+            camera = Camera.open(cameraId);
+        } catch (RuntimeException e) {
+            return true;
+        } finally {
+            if (camera != null) camera.release();
+        }
+        return false;
     }
 
 

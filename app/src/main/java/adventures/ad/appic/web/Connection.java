@@ -46,10 +46,7 @@ public class Connection {
         } catch (Exception e) {
             return e.toString();
         }
-
-
     }
-
 
     public String readService() {
         StringBuilder builder = new StringBuilder();
