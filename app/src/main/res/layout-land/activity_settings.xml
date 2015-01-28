@@ -11,30 +11,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/soundSwitch"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="50dp"
         android:checked="true"
         style="@style/TextAppearance.AppCompat.Widget.Switch"
         android:button="@android:color/darker_gray"
         android:background="@android:color/darker_gray"
         android:textOff="OFF"
-        android:textOn="ON" />
+        android:textOn="ON"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/musicTextView"
+        android:layout_toRightOf="@+id/GPSButton"
+        android:layout_toEndOf="@+id/GPSButton" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/musicSwitch"
-        android:layout_marginTop="67dp"
         android:checked="true"
-        android:layout_below="@+id/soundSwitch"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         style="@style/TextAppearance.AppCompat.Widget.Switch"
         android:button="@android:color/darker_gray"
         android:background="@android:color/darker_gray"
         android:textOff="OFF"
-        android:textOn="ON" />
+        android:textOn="ON"
+        android:layout_above="@+id/GPSButton"
+        android:layout_marginBottom="30dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,8 +47,8 @@
         android:textColor="#da3b3b3b"
         android:textSize="25dp"
         android:layout_alignBottom="@+id/soundSwitch"
-        android:layout_alignRight="@+id/musicTextView"
-        android:layout_alignEnd="@+id/musicTextView" />
+        android:layout_alignLeft="@+id/musicTextView"
+        android:layout_alignStart="@+id/musicTextView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,22 +59,24 @@
         android:textStyle="normal|bold"
         android:textColor="#da3b3b3b"
         android:textSize="25dp"
-        android:layout_marginLeft="76dp"
-        android:layout_marginStart="76dp"
-        android:layout_alignBottom="@+id/musicSwitch"
+        android:layout_marginLeft="78dp"
+        android:layout_marginStart="78dp"
+        android:layout_above="@+id/GPSButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="30dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GPS Settings"
         android:id="@+id/GPSButton"
-        android:layout_centerVertical="true"
+        android:textColor="#da3b3b3b"
+        android:textStyle="normal|bold"
+        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/soundTextView"
         android:layout_alignStart="@+id/soundTextView"
+        android:layout_marginBottom="25dp"
         android:layout_toLeftOf="@+id/musicSwitch"
-        android:layout_toStartOf="@+id/musicSwitch"
-        android:textColor="#da3b3b3b"
-        android:textStyle="normal|bold" />
+        android:layout_toStartOf="@+id/musicSwitch" />
 </RelativeLayout>
