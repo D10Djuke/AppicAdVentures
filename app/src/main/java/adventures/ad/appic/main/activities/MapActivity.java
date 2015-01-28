@@ -102,9 +102,9 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(52.855321, 5.383759)).title("Random2")));
             }
         }
-        for (int i = 0; i < markers.size(); i++) {
+       /* for (int i = 0; i < markers.size(); i++) {
             markers.get(i).setVisible(false);
-        }
+        }*/
     }
 
     private double rad(double x) {

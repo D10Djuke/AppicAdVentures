@@ -16,11 +16,20 @@ import com.wikitude.architect.ArchitectView;
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Account;
 import adventures.ad.appic.main.custom.MessageBox;
-
+import android.app.Activity;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 public class MainActivity extends ActionBarActivity {
 
     //private Account myAccount = new Account(getApplicationContext());
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,7 @@ public class MainActivity extends ActionBarActivity {
         }else{
             new MessageBox("Device Error","Your Device is not Supported", MessageBox.Type.ERROR_BOX,this).popMessage();
         }
+
     }
 
     private synchronized void startAugmentedReality(){
@@ -77,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
         if(isCameraInUsebyApp(cameraId)){
             new MessageBox("CameraError", "Your Camera is already in use", MessageBox.Type.ERROR_BOX, this);
         }else{
-            Intent i = new Intent(getApplicationContext(), CameraActivity.class);
+            Intent i = new Intent(getApplicationContext(), CameraPreview.class);
             startActivity(i);
         }
     }
