@@ -3,6 +3,7 @@ package adventures.ad.appic.main.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.LocationListener;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -15,10 +16,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.main.custom.MessageBox;
@@ -71,7 +79,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     @Override
     protected void onResume() {
         super.onResume();
-        FirstLocation = false;
+        FirstLocation = true;
         setUpMapIfNeeded();
     }
 
@@ -103,7 +111,28 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
 
-                        findMarkers(mMap.getMyLocation());
+                        if(mMap.getMyLocation() != null) {
+                            if (FirstLocation) {
+                               // mMap.addCircle(new CircleOptions().center(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude())).radius(5000).fillColor(Color.RED));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 11));
+                                FirstLocation = false;
+                            }
+                            findMarkers(mMap.getMyLocation());
+
+                            List circle = new ArrayList();
+
+                            for(int i = -180; i < 180; i++)
+                            {
+                                circle.add(computeOffset(new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude()), 5, i));
+                            }
+
+                            mMap.addPolygon(new PolygonOptions()
+                                    .add(new LatLng(85, -180), new LatLng(85, -90), new LatLng(85, 0), new LatLng(85, 90), new LatLng(85, 179.9), new LatLng(-85, 179.9), new LatLng(-85, 90), new LatLng(-85, 0),new LatLng(-85, -90),new LatLng(-85, -180), new LatLng(85, -180))
+                                    .addHole(circle)
+                                    .fillColor(Color.BLACK)
+                                    .strokeWidth(1));
+                        }
+
                     }
                 });
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -112,6 +141,9 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(51.855321, 5.383759)).title("Random1")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(52.855321, 5.383759)).title("Random2")));
+
+
+
                 for (int i = 0; i < markers.size(); i++) {
                     markers.get(i).setVisible(false);
                 }
@@ -124,12 +156,31 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         return x*Math.PI/180;
     }
 
+    /**
+     * Returns the LatLng resulting from moving a distance from an origin
+     * in the specified heading (expressed in degrees clockwise from north).
+     * @param from     The LatLng from which to start.
+     * @param distance The distance to travel.
+     * @param heading  The heading in degrees clockwise from north.
+     */
+    public static LatLng computeOffset(LatLng from, double distance, double heading) {
+        distance /= 6371;
+        heading = Math.toRadians(heading);
+        // http://williams.best.vwh.net/avform.htm#LL
+        double fromLat = Math.toRadians(from.latitude);
+        double fromLng = Math.toRadians(from.longitude);
+        double cosDistance = Math.cos(distance);
+        double sinDistance = Math.sin(distance);
+        double sinFromLat = Math.sin(fromLat);
+        double cosFromLat = Math.cos(fromLat);
+        double sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat * Math.cos(heading);
+        double dLng = Math.atan2(
+                sinDistance * cosFromLat * Math.sin(heading),
+                cosDistance - sinFromLat * sinLat);
+        return new LatLng(Math.toDegrees(Math.asin(sinLat)), Math.toDegrees(fromLng + dLng));
+    }
+
     private void findMarkers(Location myLocation) {
-        if(myLocation != null) {
-            if(FirstLocation){
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15));
-                FirstLocation = false;
-            }
             double lat = myLocation.getLatitude();
             double lng = myLocation.getLongitude();
             int R = 6371; // radius of earth in km
@@ -150,8 +201,9 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     markers.get(i).setVisible(false);
                 }
             }
-        }
     }
+
+
 
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we

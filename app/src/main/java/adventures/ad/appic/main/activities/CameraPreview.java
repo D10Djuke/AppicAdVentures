@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import adventures.ad.appic.app.R;
 
-public class camerapreview extends Activity {
+public class CameraPreview extends Activity {
     private SurfaceView preview = null;
     private SurfaceHolder previewHolder = null;
     private Camera camera = null;

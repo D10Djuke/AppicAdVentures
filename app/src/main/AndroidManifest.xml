@@ -118,7 +118,7 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
             </intent-filter>
         </activity>
         <activity
-            android:name="adventures.ad.appic.main.activities.camerapreview"
+            android:name="adventures.ad.appic.main.activities.CameraPreview"
             android:label="@string/title_activity_camera_preview" >
         </activity>
     </application>
