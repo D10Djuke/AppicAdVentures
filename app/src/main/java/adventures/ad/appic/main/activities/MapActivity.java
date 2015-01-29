@@ -11,20 +11,24 @@ import android.location.LocationManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.main.custom.MessageBox;
 
 public class MapActivity extends FragmentActivity implements LocationListener {
 
     private GoogleMap mMap = null; // Might be null if Google Play services APK is not available.
     private ArrayList<Marker> markers = new ArrayList<Marker>();
     private LocationManager locationManager;
+    private boolean FirstLocation = true;
 
 
     @Override
@@ -67,6 +71,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     @Override
     protected void onResume() {
         super.onResume();
+        FirstLocation = false;
         setUpMapIfNeeded();
     }
 
@@ -94,17 +99,25 @@ public class MapActivity extends FragmentActivity implements LocationListener {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
+                mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                    @Override
+                    public void onCameraChange(CameraPosition cameraPosition) {
+
+                        findMarkers(mMap.getMyLocation());
+                    }
+                });
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.835884, 5.189746)).title("Ergens in St. Truiden")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(51.855321, 5.383759)).title("Random1")));
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(52.855321, 5.383759)).title("Random2")));
+                for (int i = 0; i < markers.size(); i++) {
+                    markers.get(i).setVisible(false);
+                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(5.93813318, 5.34826098)));
             }
         }
-       /* for (int i = 0; i < markers.size(); i++) {
-            markers.get(i).setVisible(false);
-        }*/
     }
 
     private double rad(double x) {
@@ -113,6 +126,10 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
     private void findMarkers(Location myLocation) {
         if(myLocation != null) {
+            if(FirstLocation){
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15));
+                FirstLocation = false;
+            }
             double lat = myLocation.getLatitude();
             double lng = myLocation.getLongitude();
             int R = 6371; // radius of earth in km
@@ -125,6 +142,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                         Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
                 double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 double d = R * c;
+              //  new MessageBox("Distance to marker",d +"", MessageBox.Type.MESSAGE_BOX,this).popMessage();
                 if (d < 5) {       //radius in km
                     markers.get(i).setVisible(true);
                 }
@@ -149,11 +167,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
-        if (location != null)
-        {
-            findMarkers(location);
-        }
     }
+
 
     @Override
     public void onProviderDisabled(String provider) {
