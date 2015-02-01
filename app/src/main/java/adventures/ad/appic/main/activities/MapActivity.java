@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,11 +35,14 @@ import adventures.ad.appic.main.custom.MessageBox;
 public class MapActivity extends FragmentActivity implements LocationListener {
 
     private GoogleMap mMap = null; // Might be null if Google Play services APK is not available.
-    private ArrayList<Marker> markers = new ArrayList<Marker>();
+   // private ArrayList<Marker> markers = new ArrayList<Marker>();
     private LocationManager locationManager;
     private boolean FirstLocation = true;
+    private MapInit mapInit = new MapInit();
 
-
+   /* List circle;
+    private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    PolygonOptions polygonOptions;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +103,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
+
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -112,96 +117,28 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     public void onCameraChange(CameraPosition cameraPosition) {
 
                         if(mMap.getMyLocation() != null) {
+
                             if (FirstLocation) {
                                // mMap.addCircle(new CircleOptions().center(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude())).radius(5000).fillColor(Color.RED));
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 11));
                                 FirstLocation = false;
                             }
-                            findMarkers(mMap.getMyLocation());
-
-                            List circle = new ArrayList();
-
-                            for(int i = -180; i < 180; i++)
-                            {
-                                circle.add(computeOffset(new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude()), 5, i));
-                            }
-
-                            mMap.addPolygon(new PolygonOptions()
-                                    .add(new LatLng(85, -180), new LatLng(85, -90), new LatLng(85, 0), new LatLng(85, 90), new LatLng(85, 179.9), new LatLng(-85, 179.9), new LatLng(-85, 90), new LatLng(-85, 0),new LatLng(-85, -90),new LatLng(-85, -180), new LatLng(85, -180))
-                                    .addHole(circle)
-                                    .fillColor(Color.BLACK)
-                                    .strokeWidth(1));
+                            mapInit.mapInit(mMap);
                         }
 
                     }
                 });
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.835884, 5.189746)).title("Ergens in St. Truiden")));
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(51.855321, 5.383759)).title("Random1")));
-                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(52.855321, 5.383759)).title("Random2")));
 
+                mapInit.initMarkers(mMap);
 
-
-                for (int i = 0; i < markers.size(); i++) {
-                    markers.get(i).setVisible(false);
-                }
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(5.93813318, 5.34826098)));
             }
         }
     }
 
-    private double rad(double x) {
-        return x*Math.PI/180;
-    }
 
-    /**
-     * Returns the LatLng resulting from moving a distance from an origin
-     * in the specified heading (expressed in degrees clockwise from north).
-     * @param from     The LatLng from which to start.
-     * @param distance The distance to travel.
-     * @param heading  The heading in degrees clockwise from north.
-     */
-    public static LatLng computeOffset(LatLng from, double distance, double heading) {
-        distance /= 6371;
-        heading = Math.toRadians(heading);
-        // http://williams.best.vwh.net/avform.htm#LL
-        double fromLat = Math.toRadians(from.latitude);
-        double fromLng = Math.toRadians(from.longitude);
-        double cosDistance = Math.cos(distance);
-        double sinDistance = Math.sin(distance);
-        double sinFromLat = Math.sin(fromLat);
-        double cosFromLat = Math.cos(fromLat);
-        double sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat * Math.cos(heading);
-        double dLng = Math.atan2(
-                sinDistance * cosFromLat * Math.sin(heading),
-                cosDistance - sinFromLat * sinLat);
-        return new LatLng(Math.toDegrees(Math.asin(sinLat)), Math.toDegrees(fromLng + dLng));
-    }
 
-    private void findMarkers(Location myLocation) {
-            double lat = myLocation.getLatitude();
-            double lng = myLocation.getLongitude();
-            int R = 6371; // radius of earth in km
-            for (int i = 0; i < markers.size(); i++) {
-                double mlat = markers.get(i).getPosition().latitude;
-                double mlng = markers.get(i).getPosition().longitude;
-                double dLat = rad(mlat - lat);
-                double dLong = rad(mlng - lng);
-                double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
-                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                double d = R * c;
-              //  new MessageBox("Distance to marker",d +"", MessageBox.Type.MESSAGE_BOX,this).popMessage();
-                if (d < 5) {       //radius in km
-                    markers.get(i).setVisible(true);
-                }
-                else{
-                    markers.get(i).setVisible(false);
-                }
-            }
-    }
 
 
 
