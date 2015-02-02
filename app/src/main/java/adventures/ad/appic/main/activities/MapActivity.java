@@ -30,7 +30,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.main.custom.MapLoader;
 import adventures.ad.appic.main.custom.MessageBox;
+
+import static java.lang.Thread.sleep;
 
 public class MapActivity extends FragmentActivity implements LocationListener {
 
@@ -103,7 +106,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-
+        final int CONNECTIONATTEMPTS = 1000;
+        final int[] c = {0};
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -113,8 +117,21 @@ public class MapActivity extends FragmentActivity implements LocationListener {
             if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
                 mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                    MessageBox message;
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
+                        if(mMap.getMyLocation() == null){
+                            if(c[0] < CONNECTIONATTEMPTS) {
+                                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
+                                c[0] = c[0]+1;
+                            }
+                            if(c[0] == CONNECTIONATTEMPTS) {
+                                c[0] = c[0] + 1;
+                                message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, MapActivity.this);
+                                message.popMessage();
+                            }
+                        }
+
 
                         if(mMap.getMyLocation() != null) {
 
@@ -125,22 +142,16 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                             }
                             mapInit.mapInit(mMap);
                         }
-
                     }
                 });
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
                 mapInit.initMarkers(mMap);
 
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(5.93813318, 5.34826098)));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
             }
         }
     }
-
-
-
-
-
 
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
