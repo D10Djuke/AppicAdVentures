@@ -13,14 +13,12 @@ public class Account {
     private DataManager dataM;
 
     public Account(Context c){
-        dataM = new DataManager(c);
+
     }
 
     public Player getCharacter(){
         return myCharacter;
     }
-
-
 
     private void newCharacter(){
 

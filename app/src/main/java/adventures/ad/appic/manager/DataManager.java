@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+import adventures.ad.appic.game.Account;
 import adventures.ad.appic.web.Connection;
 
 /**
@@ -14,20 +15,16 @@ import adventures.ad.appic.web.Connection;
  */
 public class DataManager {
 
-    private Connection conn = null;
-    private Context c = null;
+    private Account account;
 
-    public DataManager(Context c){
-        conn = new Connection(c);
+    public DataManager(String accountData){
+        loadAccountData(accountData);
     }
 
-    public Connection getConnection(){
-        return conn;
-    }
-
-    public void getUserData(String gUserName){
+    private void loadAccountData(String accountData){
 
     }
+
 
 
 

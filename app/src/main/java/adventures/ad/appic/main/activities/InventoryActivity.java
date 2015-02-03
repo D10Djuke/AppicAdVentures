@@ -18,10 +18,9 @@ public class InventoryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
-        Connection c = new Connection(getApplicationContext());
+        Connection c = new Connection();
         c.readService();
         TextView t = (TextView) findViewById(R.id.testText);
-        t.setText(c.getTestText());
     }
 
 
