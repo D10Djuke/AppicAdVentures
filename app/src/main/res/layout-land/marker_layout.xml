@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp" android:layout_height="400dp"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/ivMonster"
+        android:src="@drawable/hexion_trans"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:id="@+id/tvName"
+        android:textSize="25dp"
+        android:layout_marginTop="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ivMonster"
+        android:layout_toEndOf="@+id/ivMonster"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adres"
+        android:id="@+id/tvAdres"
+        android:textSize="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/tvName"
+        android:layout_alignEnd="@+id/tvName"
+        android:layout_marginBottom="70dp" />
+
+</RelativeLayout>
