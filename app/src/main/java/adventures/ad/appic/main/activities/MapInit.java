@@ -1,5 +1,7 @@
 package adventures.ad.appic.main.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 
@@ -68,6 +70,20 @@ public class MapInit extends FragmentActivity {
                 .strokeWidth(1);
 
         polygons.add(0, mMap.addPolygon(polygonOptions));
+    }
+
+    public boolean testConnection(GoogleMap mMap, int CONNECTIONATTEMPTS, int[] c, Context context) {
+        if (c[0] < CONNECTIONATTEMPTS) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
+            c[0] = c[0] + 1;
+        }
+        if (c[0] == CONNECTIONATTEMPTS) {
+            c[0] = c[0] + 1;
+            MessageBox message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, context);
+            message.popMessage();
+            return false;
+        }
+        return true;
     }
 
     private double rad(double x) {

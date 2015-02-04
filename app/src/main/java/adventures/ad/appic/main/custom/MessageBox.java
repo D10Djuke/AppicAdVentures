@@ -23,7 +23,7 @@ public class MessageBox{
         ERROR_BOX,
         MESSAGE_BOX,
         TEST_BOX,
-        LOGIN_BOX
+        VICTORY_BOX
     }
 
 
@@ -56,19 +56,6 @@ public class MessageBox{
                     }
                 });
             break;
-            case "LOGIN_BOX":
-                messageBox.setCancelable(false);
-                messageBox.setButton(Dialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        messageBox.dismiss();
-                    }
-                });
-                messageBox.setButton(Dialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        System.exit(0);
-                    }
-                });
-            break;
             case "TEST_BOX":
                 messageBox.setCancelable(false);
                 messageBox.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
@@ -80,6 +67,15 @@ public class MessageBox{
                     }
                 });
             break;
+            case "VICTORY_BOX":
+                messageBox.setCancelable(false);
+                messageBox.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        messageBox.dismiss();
+                        ((Activity) mContext).finish();
+                    }
+                });
+                break;
         }
     }
 

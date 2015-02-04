@@ -7,14 +7,24 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.main.custom.MessageBox;
@@ -63,7 +73,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_back) {
-            finish();
+            recreate();
         }
 
         return super.onOptionsItemSelected(item);
@@ -99,26 +109,81 @@ public class MapActivity extends FragmentActivity implements LocationListener {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            // Setting a custom info window adapter for the google map
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                // Use default InfoWindow frame
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+
+                // Defines the contents of the InfoWindow
+                @Override
+                public View getInfoContents(Marker arg0) {
+
+                    // Getting view from the layout file info_window_layout
+                    View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
+                    Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+                    if(display.getRotation() == Surface.ROTATION_0)
+                    {
+                        v.setLayoutParams(new RelativeLayout.LayoutParams(400, 600));
+                    }
+
+                    if(display.getRotation() == Surface.ROTATION_90)
+                    {
+                        v.setLayoutParams(new RelativeLayout.LayoutParams(600, 400));
+                    }
+
+                    if(display.getRotation() == Surface.ROTATION_180)
+                    {
+                        v.setLayoutParams(new RelativeLayout.LayoutParams(400, 600));
+                    }
+
+                    if(display.getRotation() == Surface.ROTATION_270)
+                    {
+                        v.setLayoutParams(new RelativeLayout.LayoutParams(600, 400));
+                    }
+
+
+
+                    //v.setScaleX(0.5f);
+                    //v.setScaleY(0.5f);
+                    // Returning the view containing InfoWindow contents
+                    return v;
+                }
+            });
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    if(mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this)) {
+                        Intent i = new Intent(MapActivity.this, CameraPreview.class);
+                        MapActivity.this.startActivity(i);
+                    }
+                }
+            });
+
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+                    marker.showInfoWindow();
+                    return true;
+                }
+            });
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
                 mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-                    MessageBox message;
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
                         if(mMap.getMyLocation() == null){
-                            if(c[0] < CONNECTIONATTEMPTS) {
-                                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
-                                c[0] = c[0]+1;
-                            }
-                            if(c[0] == CONNECTIONATTEMPTS) {
-                                c[0] = c[0] + 1;
-                                message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, MapActivity.this);
-                                message.popMessage();
-                            }
+                            mapInit.testConnection(mMap,CONNECTIONATTEMPTS,c,MapActivity.this);
                         }
-
-
                         if(mMap.getMyLocation() != null) {
 
                             if (FirstLocation) {

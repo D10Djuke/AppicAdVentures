@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -12,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.main.custom.MessageBox;
 
 public class CameraPreview extends Activity {
     private SurfaceView preview = null;
@@ -19,6 +21,7 @@ public class CameraPreview extends Activity {
     private Camera camera = null;
     private boolean inPreview = false;
     private boolean cameraConfigured = false;
+    private boolean healthZero = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,4 +161,15 @@ public class CameraPreview extends Activity {
             // no-op
         }
     };
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (healthZero) {
+            healthZero = false;
+            new MessageBox("YOU WIN!", "FLAWLESS VICTORY!", MessageBox.Type.VICTORY_BOX, this).popMessage();
+        }
+
+        return super.onTouchEvent(event);
+    }
 }
