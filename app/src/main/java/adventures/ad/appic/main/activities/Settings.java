@@ -22,7 +22,7 @@ public class Settings extends ActionBarActivity {
         StrictMode.setThreadPolicy(policy);
 
         setContentView(R.layout.activity_settings);
-         c = new Connection();
+         c = new Connection(getApplicationContext());
     }
 
 

@@ -13,31 +13,37 @@ import android.widget.TextView;
 import com.wikitude.architect.ArchitectView;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
+import adventures.ad.appic.manager.DataManager;
 
 public class MainActivity extends ActionBarActivity {
 
     //private Account myAccount = new Account(getApplicationContext());
 
-
-
-
+    private DataManager mDataMan;
+    private Player mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        //mDataMan = (DataManager) intent.getParcelableExtra("mDataMan");
+        mPlayer = (Player) intent.getParcelableExtra("mPlayer");
+
         if(ArchitectView.isDeviceSupported(this)) {
 
             setContentView(R.layout.activity_main);
 
-            //((TextView) findViewById(R.id.charName)).setText(myAccount.getCharacter().getName());
-            //((TextView) findViewById(R.id.charLvl)).setText(myAccount.getCharacter().getLevelAsText());
+            ((TextView) findViewById(R.id.charName)).setText(mPlayer.getName());
+            ((TextView) findViewById(R.id.charLvl)).setText(mPlayer.getLevelAsText());
 
             ((TextView) findViewById(R.id.inventory)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), InventoryActivity.class);
+                    i.putExtra("mPlayer", mPlayer);
                     startActivity(i);
                 }
             });
