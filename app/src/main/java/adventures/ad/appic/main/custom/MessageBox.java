@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.activities.InventoryActivity;
 import adventures.ad.appic.main.activities.MapActivity;
 import adventures.ad.appic.main.activities.SettingsActivity;
 
@@ -17,7 +19,7 @@ public class MessageBox{
 
     private AlertDialog messageBox;
     private Context mContext;
-
+    private Player mPlayer;
 
     public enum Type{
         ERROR_BOX,
@@ -35,6 +37,11 @@ public class MessageBox{
 
         setMessageType(type);
 
+    }
+
+    public void setPlayer(Player p)
+    {
+        mPlayer = p;
     }
 
     private void setMessageType(Type type){
@@ -73,6 +80,9 @@ public class MessageBox{
                     public void onClick(DialogInterface dialog, int id) {
                         messageBox.dismiss();
                         ((Activity) mContext).finish();
+                        Intent i = new Intent(mContext, InventoryActivity.class);
+                        i.putExtra("mPlayer", mPlayer);
+                        mContext.startActivity(i);
                     }
                 });
                 break;

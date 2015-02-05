@@ -39,8 +39,8 @@ public class LoginActivity extends FragmentActivity{
 
         EditText passText = (EditText) findViewById(R.id.editText);
 
-        //Boolean trueUser = true;
-        Boolean trueUser = new Connection(getApplicationContext()).confirmUser(user, passText.getText().toString());
+        Boolean trueUser = true;
+        //Boolean trueUser = new Connection(getApplicationContext()).confirmUser(user, passText.getText().toString());
 
         if(trueUser) {
 

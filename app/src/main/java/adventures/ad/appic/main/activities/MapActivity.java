@@ -3,6 +3,7 @@ package adventures.ad.appic.main.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.Location;
@@ -26,7 +27,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.security.Provider;
+
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
 
 import static java.lang.Thread.sleep;
@@ -38,6 +42,9 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     private LocationManager locationManager;
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
+    final int CONNECTIONATTEMPTS = 1000;
+    final int[] c = {0};
+    private Player mPlayer;
 
    /* List circle;
     private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
@@ -46,6 +53,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        Intent intent = getIntent();
+        mPlayer = (Player) intent.getParcelableExtra("mPlayer");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         setUpMapIfNeeded();
@@ -79,6 +88,36 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         return super.onOptionsItemSelected(item);
     }
 
+    public class RecreateAsyncTask extends AsyncTask<String, Void, String> {
+        // Variables to pass data between doInBackground() and onPostExevute() here
+
+        @Override
+        protected void onPreExecute(){
+
+            Location loc = new Location("");
+            loc.reset();
+
+            mMap.getMyLocation().set(loc);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            return "Finished";
+        }
+
+        @Override
+        protected void onPostExecute(String res){
+           // if(mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this)) {
+            if(mapInit.checkLocationService(locationManager, MapActivity.this)){
+                Intent i = new Intent(MapActivity.this, CameraPreview.class);
+                i.putExtra("mPlayer", mPlayer);
+                MapActivity.this.startActivity(i);
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -102,8 +141,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-        final int CONNECTIONATTEMPTS = 1000;
-        final int[] c = {0};
+
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -159,10 +197,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    if(mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this)) {
-                        Intent i = new Intent(MapActivity.this, CameraPreview.class);
-                        MapActivity.this.startActivity(i);
-                    }
+
+                    new RecreateAsyncTask().execute();
                 }
             });
 
@@ -182,7 +218,9 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
                         if(mMap.getMyLocation() == null){
-                            mapInit.testConnection(mMap,CONNECTIONATTEMPTS,c,MapActivity.this);
+                            if(mapInit.checkLocationService(locationManager, MapActivity.this)) {
+                                mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this);
+                            }
                         }
                         if(mMap.getMyLocation() != null) {
 
@@ -198,8 +236,6 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
                 mapInit.initMarkers(mMap);
-
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
             }
         }
     }

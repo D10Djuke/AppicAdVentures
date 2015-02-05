@@ -3,6 +3,7 @@ package adventures.ad.appic.main.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,6 +71,21 @@ public class MapInit extends FragmentActivity {
                 .strokeWidth(1);
 
         polygons.add(0, mMap.addPolygon(polygonOptions));
+    }
+
+
+    public boolean checkLocationService(LocationManager lm, Context context) {
+        boolean gps_enabled = false, network_enabled = false;
+
+        gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!gps_enabled && !network_enabled) {
+            MessageBox message = new MessageBox("NO SIGNAL", "Location Service Disabled", MessageBox.Type.TEST_BOX, context);
+            message.popMessage();
+            return false;
+        }
+        return true;
     }
 
     public boolean testConnection(GoogleMap mMap, int CONNECTIONATTEMPTS, int[] c, Context context) {

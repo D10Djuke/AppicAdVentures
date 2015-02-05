@@ -1,6 +1,7 @@
 package adventures.ad.appic.main.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
 
 public class CameraPreview extends Activity {
@@ -23,12 +25,15 @@ public class CameraPreview extends Activity {
     private boolean cameraConfigured = false;
     private boolean healthZero = true;
 
+    private Player mPlayer;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Intent intent = getIntent();
+        mPlayer = (Player) intent.getParcelableExtra("mPlayer");
         setContentView(R.layout.activity_camerapreview);
-
         preview = (SurfaceView) findViewById(R.id.cpPreview);
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
@@ -38,6 +43,8 @@ public class CameraPreview extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+
+
 
         int cameraId = -1;
 
@@ -167,7 +174,9 @@ public class CameraPreview extends Activity {
 
         if (healthZero) {
             healthZero = false;
-            new MessageBox("YOU WIN!", "FLAWLESS VICTORY!", MessageBox.Type.VICTORY_BOX, this).popMessage();
+            MessageBox messagebox = new MessageBox("YOU WIN!", "FLAWLESS VICTORY!", MessageBox.Type.VICTORY_BOX, this);
+            messagebox.setPlayer(mPlayer);
+            messagebox.popMessage();
         }
 
         return super.onTouchEvent(event);
