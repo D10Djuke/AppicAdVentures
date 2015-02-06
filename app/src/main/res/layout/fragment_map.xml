@@ -6,10 +6,20 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <TextView
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/map"
-        android:text="0 events nearby"/>
+        android:id="@+id/ivMap"
+        android:src="@drawable/maps"
+        android:layout_gravity="right|center_vertical"
+        android:layout_toRightOf="@+id/tvEvents"
+        android:layout_marginLeft="100dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvEvents"
+        android:text="0 events nearby"
+        android:layout_gravity="left|center_vertical" />
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wikitude.architect.ArchitectView;
@@ -23,6 +24,8 @@ public class MainActivity extends ActionBarActivity {
 
     private DataManager mDataMan;
     private Player mPlayer;
+    private String events;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,6 @@ public class MainActivity extends ActionBarActivity {
         if(ArchitectView.isDeviceSupported(this)) {
 
             setContentView(R.layout.activity_main);
-
             ((TextView) findViewById(R.id.charName)).setText(mPlayer.getName());
             ((TextView) findViewById(R.id.charLvl)).setText(mPlayer.getLevelAsText());
 
@@ -48,12 +50,13 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
-            ((TextView) findViewById(R.id.map)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) findViewById(R.id.ivMap)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), MapActivity.class);
                     i.putExtra("mPlayer", mPlayer);
-                    startActivity(i);
+                    startActivityForResult(i, 1);
+
                 }
             });
 
@@ -69,6 +72,19 @@ public class MainActivity extends ActionBarActivity {
             new MessageBox("Device Error","Your Device is not Supported", MessageBox.Type.ERROR_BOX,this).popMessage();
         }
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                events = data.getStringExtra("mEvents");
+                ((TextView) findViewById(R.id.tvEvents)).setText(events);
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
     private synchronized void startAugmentedReality(){
@@ -102,7 +118,6 @@ public class MainActivity extends ActionBarActivity {
         }
         return false;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

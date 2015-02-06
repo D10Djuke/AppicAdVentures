@@ -88,36 +88,6 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         return super.onOptionsItemSelected(item);
     }
 
-    public class RecreateAsyncTask extends AsyncTask<String, Void, String> {
-        // Variables to pass data between doInBackground() and onPostExevute() here
-
-        @Override
-        protected void onPreExecute(){
-
-            Location loc = new Location("");
-            loc.reset();
-
-            mMap.getMyLocation().set(loc);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-
-            return "Finished";
-        }
-
-        @Override
-        protected void onPostExecute(String res){
-           // if(mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this)) {
-            if(mapInit.checkLocationService(locationManager, MapActivity.this)){
-                Intent i = new Intent(MapActivity.this, CameraPreview.class);
-                i.putExtra("mPlayer", mPlayer);
-                MapActivity.this.startActivity(i);
-            }
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -198,7 +168,18 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
 
-                    new RecreateAsyncTask().execute();
+                    if(mapInit.checkLocationService(locationManager)){
+                        Intent i = new Intent(MapActivity.this, CameraPreview.class);
+                        i.putExtra("mPlayer", mPlayer);
+                        MapActivity.this.startActivity(i);
+                    }
+                    else{
+                        Intent i = new Intent();
+                        i.putExtra("mEvents", "No Signal!");
+                        setResult(RESULT_OK, i);
+                        MessageBox message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, MapActivity.this);
+                        message.popMessage();
+                    }
                 }
             });
 
@@ -217,9 +198,21 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
+                        Intent i = new Intent();
                         if(mMap.getMyLocation() == null){
-                            if(mapInit.checkLocationService(locationManager, MapActivity.this)) {
-                                mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c, MapActivity.this);
+                            if(mapInit.checkLocationService(locationManager)) {
+                               if(!mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c)){
+                                   i.putExtra("mEvents", "No Signal!");
+                                   setResult(RESULT_OK, i);
+                                   MessageBox message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, MapActivity.this);
+                                   message.popMessage();
+                               }
+                            }
+                            else{
+                                i.putExtra("mEvents", "No Signal!");
+                                setResult(RESULT_OK, i);
+                                MessageBox message = new MessageBox("NO SIGNAL", "Location Service Disabled", MessageBox.Type.TEST_BOX, MapActivity.this);
+                                message.popMessage();
                             }
                         }
                         if(mMap.getMyLocation() != null) {
@@ -229,7 +222,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 11));
                                 FirstLocation = false;
                             }
-                            mapInit.mapInit(mMap);
+                            i.putExtra("mEvents", mapInit.mapInit(mMap)+ " event(s) nearby.");
+                            setResult(RESULT_OK, i);
                         }
                     }
                 });

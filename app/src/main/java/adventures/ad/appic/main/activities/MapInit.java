@@ -5,6 +5,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,11 +31,12 @@ public class MapInit extends FragmentActivity {
     private ArrayList<Marker> markers = new ArrayList<Marker>();
     private boolean FirstLocation = true;
     private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    private MainActivity mainActivity;
 
 
-    public void mapInit(GoogleMap map) {
-        findMarkers(map.getMyLocation());
+    public int mapInit(GoogleMap map) {
         updateMap(map);
+        return findMarkers(map.getMyLocation());
     }
 
 
@@ -74,29 +76,25 @@ public class MapInit extends FragmentActivity {
     }
 
 
-    public boolean checkLocationService(LocationManager lm, Context context) {
+    public boolean checkLocationService(LocationManager lm) {
         boolean gps_enabled = false, network_enabled = false;
 
         gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (!gps_enabled && !network_enabled) {
-            MessageBox message = new MessageBox("NO SIGNAL", "Location Service Disabled", MessageBox.Type.TEST_BOX, context);
-            message.popMessage();
             return false;
         }
         return true;
     }
 
-    public boolean testConnection(GoogleMap mMap, int CONNECTIONATTEMPTS, int[] c, Context context) {
+    public boolean testConnection(GoogleMap mMap, int CONNECTIONATTEMPTS, int[] c) {
         if (c[0] < CONNECTIONATTEMPTS) {
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(0, 0)));
             c[0] = c[0] + 1;
         }
         if (c[0] == CONNECTIONATTEMPTS) {
             c[0] = c[0] + 1;
-            MessageBox message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, context);
-            message.popMessage();
             return false;
         }
         return true;
@@ -130,10 +128,11 @@ public class MapInit extends FragmentActivity {
         return new LatLng(Math.toDegrees(Math.asin(sinLat)), Math.toDegrees(fromLng + dLng));
     }
 
-    private void findMarkers(Location myLocation) {
+    private int findMarkers(Location myLocation) {
+        int events = 0;
         double lat = myLocation.getLatitude();
         double lng = myLocation.getLongitude();
-        int R = 6371; // radius of earth in km
+        int RADIUS = 6371; // radius of earth in km
         for (int i = 0; i < markers.size(); i++) {
             double mlat = markers.get(i).getPosition().latitude;
             double mlng = markers.get(i).getPosition().longitude;
@@ -142,14 +141,16 @@ public class MapInit extends FragmentActivity {
             double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                     Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            double d = R * c;
+            double d = RADIUS * c;
             //  new MessageBox("Distance to marker",d +"", MessageBox.Type.MESSAGE_BOX,this).popMessage();
             if (d < 5) {       //radius in km
                 markers.get(i).setVisible(true);
+               events++;
             }
             else{
                 markers.get(i).setVisible(false);
             }
         }
+        return events;
     }
 }
