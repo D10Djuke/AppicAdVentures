@@ -20,7 +20,6 @@ public interface Character {
     int baseAccuracy = 10;
     int baseLuck = 10;
 
-    abstract void takeDamage();
-    abstract void dealDamage();
+    abstract void takeDamage(int damage);
 
 }

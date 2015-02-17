@@ -3,10 +3,12 @@ package adventures.ad.appic.main.activities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -16,9 +18,11 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Creature;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
 
@@ -28,10 +32,13 @@ public class CameraPreview extends Activity {
     private Camera camera = null;
     private boolean inPreview = false;
     private boolean cameraConfigured = false;
-    private boolean healthZero = true;
+    private boolean healthZero = false;
 
     private Player mPlayer;
+    private Creature mCreature;
     private AnimationDrawable testAnimation;
+
+    private ProgressBar bar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,9 +51,13 @@ public class CameraPreview extends Activity {
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
+        mCreature = new Creature(Creature.Dificulity.EASY, "Dolfje", mPlayer, Creature.Element.FIRE);
+
         ImageView animationImage = (ImageView) findViewById(R.id.animationView);
         animationImage.setBackgroundResource(R.drawable.animation_test);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
+
+        init();
 
     }
 
@@ -200,12 +211,61 @@ public class CameraPreview extends Activity {
         return super.onTouchEvent(event);
     }*/
 
-    public void win(View view){
-            if (healthZero) {
-                healthZero = false;
-                MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
-                messagebox.setPlayer(mPlayer);
-                messagebox.popMessage();
-            }
+    private void init(){
+        bar = (ProgressBar) findViewById(R.id.progressBar);
+        bar.setMax(100);
+        bar.setProgress(100);
+        bar.setBackgroundColor(Color.RED);
+    }
+
+    private void setHealth(){
+        int currHealth = mCreature.getHealth();
+        int maxHealth = mCreature.getStat(0);
+
+        bar.setProgress((currHealth/maxHealth)*100);
+    }
+
+    public void attackEnemy(View view){
+
+       if(!healthZero) {
+           int damageDone = mPlayer.dealDamage(mCreature);
+           if (damageDone > 0) {
+               mCreature.takeDamage(damageDone);
+               final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
+               toast.show();
+
+               Handler handler = new Handler();
+               handler.postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       toast.cancel();
+                   }
+               }, 200);
+
+           }else{
+               final Toast toast = Toast.makeText(getApplicationContext(), "miss", Toast.LENGTH_SHORT);
+               toast.show();
+
+               Handler handler = new Handler();
+               handler.postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       toast.cancel();
+                   }
+               }, 200);
+           }
+           if (mCreature.getHealth() <= 0) {
+               healthZero = true;
+               win();
+           }else{
+               setHealth();
+           }
+       }
+    }
+
+    public void win(){
+            MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
+            messagebox.setPlayer(mPlayer);
+            messagebox.popMessage();
         }
 }

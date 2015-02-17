@@ -32,7 +32,7 @@ public class DataManager implements Parcelable{
 
         ArrayList<Item> inventory = newInventory(data[0]);
 
-        mPlayer.setBasic(data[1], Integer.parseInt(data[2]), inventory);
+        mPlayer.setBasic(data[1], Integer.parseInt(data[2]), inventory,Integer.parseInt(data[3]));
     }
 
     private ArrayList<Item> newInventory(String user){

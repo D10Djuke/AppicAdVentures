@@ -45,7 +45,7 @@ public class LoginActivity extends FragmentActivity{
         if(trueUser) {
 
             //String characterData = new Connection(getApplicationContext()).getCharacter(user);
-            String characterData = "APPIC;Guido;69";
+            String characterData = "APPIC;Guido;5;10";
 
             DataManager dataM = new DataManager(characterData, getApplicationContext());
             Player player = dataM.getmPlayer();
