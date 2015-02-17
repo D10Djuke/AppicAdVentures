@@ -202,7 +202,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
-                            int distance = 5;
+                            int distance = 5000;
                             Location dest = new Location("");
                             dest.setLatitude(marker.getPosition().latitude);
                             dest.setLongitude(marker.getPosition().longitude);

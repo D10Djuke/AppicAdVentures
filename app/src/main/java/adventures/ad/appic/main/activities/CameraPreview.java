@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -41,6 +42,9 @@ public class CameraPreview extends Activity {
 
     private ProgressBar bar;
 
+    private float xOff = 0;
+    private float yOff = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,14 @@ public class CameraPreview extends Activity {
         animationImage.setBackgroundResource(R.drawable.animation_test);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
 
+        animationImage.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                  xOff = event.getX();
+                  yOff = event.getY();
+                return true;
+            }
+        });
         init();
 
     }
@@ -199,19 +211,6 @@ public class CameraPreview extends Activity {
         }
     };
 
- /*   @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        if (healthZero) {
-            healthZero = false;
-            MessageBox messagebox = new MessageBox("YOU WIN!", "FLAWLESS VICTORY!", MessageBox.Type.VICTORY_BOX, this);
-            messagebox.setPlayer(mPlayer);
-            messagebox.popMessage();
-        }
-
-        return super.onTouchEvent(event);
-    }*/
-
     private void init(){
         bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setMax(100);
@@ -221,10 +220,11 @@ public class CameraPreview extends Activity {
     }
 
     private void setHealth(){
-        int currHealth = mCreature.getHealth();
-        int maxHealth = mCreature.getStat(0);
+        double currHealth = mCreature.getHealth();
+        double maxHealth = mCreature.getStat(0);
 
-        bar.setProgress((currHealth/maxHealth)*100);
+
+        bar.setProgress((int) ((currHealth / maxHealth) * 100));
     }
 
     public void attackEnemy(View view){
@@ -234,6 +234,7 @@ public class CameraPreview extends Activity {
            if (damageDone > 0) {
                mCreature.takeDamage(damageDone);
                final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
+               toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, (int)xOff, (int)yOff);
                toast.show();
 
                Handler handler = new Handler();

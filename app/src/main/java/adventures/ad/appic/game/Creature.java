@@ -2,6 +2,8 @@ package adventures.ad.appic.game;
 
 import android.location.Location;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jory on 25/01/2015.
  */
@@ -10,7 +12,7 @@ public class Creature implements Character{
     protected int experience;
     protected int location;
     protected String description;
-    protected String[] stats;
+    protected ArrayList<String> stats = new ArrayList<>(9);
     protected String name;
     protected int level;
     protected int currHealth;
@@ -47,13 +49,16 @@ public class Creature implements Character{
     }
 
     private void setBaseStats(){
-        stats = new String[9];
-        stats[3] = "10";
-        stats[4] = "10";
-        stats[5] = "10";
-        stats[6] = "5";
-        stats[7] = "5";
-        stats[8] = "5";
+
+        stats.add("");
+        stats.add("");
+        stats.add("");
+        stats.add("10");
+        stats.add("10");
+        stats.add("10");
+        stats.add("5");
+        stats.add("5");
+        stats.add("5");
     }
 
     private void levelWithPlayer(int playerLevel){
@@ -77,19 +82,19 @@ public class Creature implements Character{
 
         switch(element){
             case FIRE:
-                elementType = Integer.parseInt(stats[6]);
+                elementType = Integer.parseInt(stats.get(6));
                 break;
             case NATURE:
-                elementType = Integer.parseInt(stats[7]);
+                elementType = Integer.parseInt(stats.get(7));
                 break;
             case WATER:
-                elementType = Integer.parseInt(stats[8]);
+                elementType = Integer.parseInt(stats.get(8));
                 break;
         }
 
-        stats[0] = Integer.toString(100);
-        stats[1] = Integer.toString(level * level * (Integer.parseInt(stats[4]) * 4 + elementType ) / 256);
-        stats[2] = Integer.toString((Integer.parseInt(stats[3]) * 4 + (level * Integer.parseInt(stats[4]) * Integer.parseInt(stats[4]) / 32)));
+        stats.set(0, Integer.toString(100));
+        stats.set(1, Integer.toString(level * level * (Integer.parseInt(stats.get(4)) * 4 + elementType ) / 256));
+        stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
     }
 
     public int getLevel(){
@@ -97,7 +102,7 @@ public class Creature implements Character{
     }
 
     public int getStat(int i){
-        return Integer.parseInt(stats[i]);
+        return Integer.parseInt(stats.get(i));
     }
 
     public String getName(){

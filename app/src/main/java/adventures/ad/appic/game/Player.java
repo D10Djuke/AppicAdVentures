@@ -15,7 +15,7 @@ public class Player implements Character, Parcelable {
     private int currExp = 0;
     private ArrayList<Item> inventory;
 
-    private String[] stats;
+    private ArrayList<String> stats  = new ArrayList<>(9);
 
     public Player(){
 
@@ -32,24 +32,27 @@ public class Player implements Character, Parcelable {
     }
 
     private void calculateStats(){
-        stats[0] = Integer.toString((Integer.parseInt(stats[4]) * 4 + (level * Integer.parseInt(stats[4]) * Integer.parseInt(stats[4]) / 32)));
-        stats[1] = Integer.toString((Integer.parseInt(stats[4]) + ((level * level * (Integer.parseInt(stats[4])) / 256) * 3 / 2)));
-        stats[2] = Integer.toString((Integer.parseInt(stats[3]) * 4 + (level * Integer.parseInt(stats[4]) * Integer.parseInt(stats[4]) / 32)));
+        stats.set(0, Integer.toString((Integer.parseInt(stats.get(4)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
+        stats.set(1, Integer.toString((Integer.parseInt(stats.get(4)) + ((level * level * (Integer.parseInt(stats.get(4))) / 256) * 3 / 2))));
+        stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
 
     }
 
     private void setBaseStats(){
-        stats = new String[9];
-        stats[3] = "10";
-        stats[4] = "10";
-        stats[5] = "10";
-        stats[6] = "5";
-        stats[7] = "5";
-        stats[8] = "5";
+
+        stats.add("");
+        stats.add("");
+        stats.add("");
+        stats.add("10");
+        stats.add("10");
+        stats.add("10");
+        stats.add("5");
+        stats.add("5");
+        stats.add("5");
     }
 
     public String getStats(int i){
-        return stats[i];
+        return stats.get(i);
     }
 
     public Player(String name){
@@ -110,12 +113,14 @@ public class Player implements Character, Parcelable {
         dest.writeString(name);
         dest.writeInt(level);
         dest.writeList(inventory);
+        dest.writeList(stats);
     }
 
     private void readFromParcel(Parcel in) {
         name = in.readString();
         level = in.readInt();
         inventory = in.readArrayList(getClass().getClassLoader());
+        stats = in.readArrayList(getClass().getClassLoader());
     }
 
     public Player(Parcel in){
