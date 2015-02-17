@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
 import android.os.Build;
@@ -215,7 +216,7 @@ public class CameraPreview extends Activity {
         bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setMax(100);
         bar.setProgress(100);
-        bar.setBackgroundColor(Color.RED);
+        bar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
     }
 
     private void setHealth(){

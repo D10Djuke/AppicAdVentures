@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="adventures.ad.appic.main.activities.AccountActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/characterImg"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <GridLayout
+        android:id="@+id/statList"
+        android:layout_alignTop="@id/characterImg"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:columnCount="2"
+        android:rowCount="12">
+
+        <TextView android:id="@+id/statName" android:text="Name:"/>
+        <TextView android:id="@+id/nameStat"/>
+        <TextView android:id="@+id/statLvl" android:text="Level:"/>
+        <TextView android:id="@+id/lvlStat"/>
+        <TextView android:id="@+id/statHealth" android:text="Health:"/>
+        <TextView android:id="@+id/healthStat"/>
+        <TextView android:id="@+id/statAtk" android:text="Attack:"/>
+        <TextView android:id="@+id/atkStat"/>
+        <TextView android:id="@+id/statDef" android:text="Defence:"/>
+        <TextView android:id="@+id/defStat"/>
+        <TextView android:id="@+id/statEnd" android:text="Endurance:"/>
+        <TextView android:id="@+id/endStat"/>
+        <TextView android:id="@+id/statStr" android:text="Strength:"/>
+        <TextView android:id="@+id/strStat"/>
+        <TextView android:id="@+id/statStam" android:text="Stamina:"/>
+        <TextView android:id="@+id/stamStat"/>
+        <TextView android:id="@+id/statSpir" android:text="Spirit:"/>
+        <TextView android:id="@+id/spirStat"/>
+        <TextView android:id="@+id/statChar" android:text="Charisma:"/>
+        <TextView android:id="@+id/charStat"/>
+        <TextView android:id="@+id/statWisd" android:text="Wisdom:"/>
+        <TextView android:id="@+id/wisdStat"/>
+
+
+        </GridLayout>
+
+    <Button
+        android:layout_alignBottom="@id/statList"
+        android:layout_width="180dp"
+        android:layout_height="" />
+</RelativeLayout>

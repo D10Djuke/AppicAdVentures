@@ -90,7 +90,7 @@ public class Player implements Character, Parcelable {
         }
 
         if(((1 * blockValue) / 256) < 100){
-
+           damage = 33;
         }
         return damage;
     }

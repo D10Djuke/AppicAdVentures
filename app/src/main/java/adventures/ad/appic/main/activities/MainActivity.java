@@ -64,6 +64,14 @@ public class MainActivity extends ActionBarActivity {
                         startAugmentedReality();
                 }
             });
+            ((ImageView) findViewById(R.id.charHead)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), AccountActivity.class);
+                    i.putExtra("mPlayer", mPlayer);
+                    startActivityForResult(i, 1);
+                }
+            });
 
 
         }else{
