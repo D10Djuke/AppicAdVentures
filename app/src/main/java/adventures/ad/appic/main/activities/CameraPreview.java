@@ -2,6 +2,7 @@ package adventures.ad.appic.main.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import adventures.ad.appic.app.R;
@@ -27,6 +29,7 @@ public class CameraPreview extends Activity {
 
     private Player mPlayer;
 
+    private AnimationDrawable testAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,11 @@ public class CameraPreview extends Activity {
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        ImageView animationImage = (ImageView) findViewById(R.id.animationView);
+        animationImage.setBackgroundResource(R.drawable.animation_test);
+        testAnimation = (AnimationDrawable) animationImage.getBackground();
+
     }
 
     @Override
@@ -92,6 +100,14 @@ public class CameraPreview extends Activity {
         }
 
         return (result);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus){
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+           testAnimation.start();
+        }
     }
 
     private void initPreview(int width, int height) {

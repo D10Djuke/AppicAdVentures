@@ -1,6 +1,7 @@
 package adventures.ad.appic.web;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -18,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 import adventures.ad.appic.main.custom.MessageBox;
 
@@ -26,10 +28,13 @@ import adventures.ad.appic.main.custom.MessageBox;
  */
 public class Connection {
 
-    String localURL = "http://10.81.131.205/appic/Users/object/Users/gid/";
+    String localURL = "http://169.254.16.223/appic/Users/object/Users/gid/";
     String serverURL = "http://85.151.202.128:550/appic/connect.php?action=get&object=user";
     String url;
     String input;
+
+    String jsonString = "default";
+    JSONObject jSon = null;
 
     Context c;
 
@@ -46,13 +51,12 @@ public class Connection {
     public Boolean confirmUser(String user, String pass){
 
         url = localURL + user;
+        new ConnectToServiceTask().execute(url);
 
-        try {
-            JSONObject json = new JSONObject(readService());
-            return true;
-        } catch (Exception e) {
-            Log.e("test",Log.getStackTraceString(e));
+        if(jsonString.equals("default")){
             return false;
+        }else{
+            return true;
         }
     }
 
@@ -61,7 +65,7 @@ public class Connection {
         String url = localURL + user;
 
         try {
-            JSONObject json = new JSONObject(readService());
+            JSONObject json = new JSONObject();
             return json.toString();
         } catch (Exception e) {
             return e.toString();
@@ -77,47 +81,42 @@ public class Connection {
         }
     }
 
-    public String readService() throws Exception{
-        StringBuilder builder = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
+    private class ConnectToServiceTask extends AsyncTask<String, Void, Void>{
 
-        HttpResponse response = client.execute(httpPost);
-        StatusLine statusLine = response.getStatusLine();
-        int statusCode = statusLine.getStatusCode();
-        if (statusCode == 200) {
-            HttpEntity entity = response.getEntity();
-            InputStream content = entity.getContent();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
+        @Override
+        protected Void doInBackground(String... params) {
+            StringBuilder builder = new StringBuilder();
+            HttpClient client = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(url);
+
+            try{
+                HttpResponse response = client.execute(httpPost);
+                StatusLine statusLine = response.getStatusLine();
+                int statusCode = statusLine.getStatusCode();
+                if (statusCode == 200) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                } else {
+                }
+            }catch (Exception e){
+                Log.e("test",Log.getStackTraceString(e));
             }
-        } else {
+            jsonString = builder.toString();
+            return null;
         }
 
-        /*
-        try {
-            HttpResponse response = client.execute(httpPost);
-            StatusLine statusLine = response.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                HttpEntity entity = response.getEntity();
-                InputStream content = entity.getContent();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-            } else {
+        @Override
+        protected void onPostExecute(Void result){
+            try {
+                jSon = new JSONObject(jsonString);
+            } catch (Exception e) {
+                Log.e("test",Log.getStackTraceString(e));
             }
-        } catch (ClientProtocolException e) {
-            Log.e("test1", e.getLocalizedMessage());
-        } catch (IOException e) {
-            Log.e("test2", e.getLocalizedMessage());
-        } catch (Exception e){
-            Log.e("test3", e.getLocalizedMessage());
-        }*/
-        return builder.toString();
+        }
     }
 }

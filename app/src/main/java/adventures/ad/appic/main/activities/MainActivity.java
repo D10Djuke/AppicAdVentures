@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
         //mDataMan = (DataManager) intent.getParcelableExtra("mDataMan");
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
 
-        if(ArchitectView.isDeviceSupported(this)) {
+        if(true) {
 
             setContentView(R.layout.activity_main);
             ((TextView) findViewById(R.id.charName)).setText(mPlayer.getName());
@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
-            ((ImageView) findViewById(R.id.ivMap)).setOnClickListener(new View.OnClickListener() {
+            ((TextView) findViewById(R.id.tvEvents)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), MapActivity.class);

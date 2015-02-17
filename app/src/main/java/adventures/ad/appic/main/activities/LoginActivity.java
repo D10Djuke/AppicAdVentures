@@ -30,14 +30,14 @@ public class LoginActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextView t = (TextView) findViewById(R.id.textView);
+        TextView t = (TextView) findViewById(R.id.usernameTextView);
         user = getUsername();
         t.setText(user);
     }
 
     public void login(View view) {
 
-        EditText passText = (EditText) findViewById(R.id.editText);
+        EditText passText = (EditText) findViewById(R.id.passwordEditText);
 
         Boolean trueUser = true;
         //Boolean trueUser = new Connection(getApplicationContext()).confirmUser(user, passText.getText().toString());

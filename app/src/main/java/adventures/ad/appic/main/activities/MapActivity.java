@@ -131,7 +131,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                 @Override
                 public View getInfoContents(Marker arg0) {
 
-                    // Getting view from the layout file info_window_layout
+                    // Getting view from the ayout file info_window_layout
                     View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
                     Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 

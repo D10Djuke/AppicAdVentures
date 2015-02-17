@@ -10,10 +10,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ivMap"
-        android:src="@drawable/maps"
+
         android:layout_gravity="right|center_vertical"
         android:layout_toRightOf="@+id/tvEvents"
-        android:layout_marginLeft="100dp"/>
+        android:layout_marginLeft="100dp"
+    />
+    <!--android:src="@drawable/maps"-->
+
+
 
     <TextView
         android:layout_width="wrap_content"
