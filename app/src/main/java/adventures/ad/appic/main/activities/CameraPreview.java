@@ -216,7 +216,8 @@ public class CameraPreview extends Activity {
         bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setMax(100);
         bar.setProgress(100);
-        bar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
+        bar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+
     }
 
     private void setHealth(){
