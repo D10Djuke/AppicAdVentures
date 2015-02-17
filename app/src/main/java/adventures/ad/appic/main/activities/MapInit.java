@@ -1,16 +1,10 @@
 package adventures.ad.appic.main.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
-import android.widget.TextView;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -22,6 +16,7 @@ import java.util.List;
 
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.main.custom.MessageBox;
+import adventures.ad.appic.web.Connection;
 
 /**
  * Created by vivid_000 on 2/1/2015.
@@ -40,7 +35,10 @@ public class MapInit extends FragmentActivity {
     }
 
 
-    public void initMarkers(GoogleMap mMap) {
+    public void initMarkers(GoogleMap mMap, Connection con) {
+      /*  for(int i = 0; i < con.getLocationlist().size(); i++) {
+            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(con.getLocationlist().get(i).getCoordx()), Double.parseDouble(con.getLocationlist().get(i).getCoordy()))).title(con.getLocationlist().get(i).getName())));
+        }*/
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.835884, 5.189746)).title("Ergens in St. Truiden")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
@@ -54,6 +52,8 @@ public class MapInit extends FragmentActivity {
 
     private void updateMap(GoogleMap mMap) {
 
+        int radius = 5; //radius in km
+
         if(polygons.size() != 0) {
             polygons.get(0).remove();
         }
@@ -62,7 +62,7 @@ public class MapInit extends FragmentActivity {
 
         for(int i = -180; i < 180; i++)
         {
-            circle.add(computeOffset(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 5, i));
+            circle.add(computeOffset(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), radius, i));
         }
 
         PolygonOptions polygonOptions = new PolygonOptions()
@@ -130,9 +130,10 @@ public class MapInit extends FragmentActivity {
 
     private int findMarkers(Location myLocation) {
         int events = 0;
+        int radius = 5; //radius in km
         double lat = myLocation.getLatitude();
         double lng = myLocation.getLongitude();
-        int RADIUS = 6371; // radius of earth in km
+        int EARTHRADIUS = 6371; // radius of earth in km
         for (int i = 0; i < markers.size(); i++) {
             double mlat = markers.get(i).getPosition().latitude;
             double mlng = markers.get(i).getPosition().longitude;
@@ -141,9 +142,8 @@ public class MapInit extends FragmentActivity {
             double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                     Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            double d = RADIUS * c;
-            //  new MessageBox("Distance to marker",d +"", MessageBox.Type.MESSAGE_BOX,this).popMessage();
-            if (d < 5) {       //radius in km
+            double d = EARTHRADIUS * c;
+            if (d < radius) {       //radius in km
                 markers.get(i).setVisible(true);
                events++;
             }

@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wikitude.architect.ArchitectView;
-
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
@@ -41,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
             ((TextView) findViewById(R.id.charName)).setText(mPlayer.getName());
             ((TextView) findViewById(R.id.charLvl)).setText(mPlayer.getLevelAsText());
 
-            ((TextView) findViewById(R.id.inventory)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) findViewById(R.id.ivBackpack)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), InventoryActivity.class);
@@ -50,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
-            ((TextView) findViewById(R.id.tvEvents)).setOnClickListener(new View.OnClickListener() {
+            ((ImageView) findViewById(R.id.ivMap)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), MapActivity.class);

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/ivMonster"
-        android:src="@drawable/hexion_trans"
+        android:src="@drawable/monster_silhouet"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

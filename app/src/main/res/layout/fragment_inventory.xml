@@ -2,16 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="adventures.ad.appic.main.fragments.InventoryFragment"
-    android:background="@drawable/border_black"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     >
-
-    <TextView
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="to inventory"
-        android:id="@+id/inventory"/>
+        android:id="@+id/ivBackpack"
+        android:layout_gravity="right|center_vertical"
+        android:layout_toRightOf="@+id/tvEvents"
+        android:layout_marginLeft="100dp"
+        android:src="@drawable/backpack"/>
+
 
 </FrameLayout>

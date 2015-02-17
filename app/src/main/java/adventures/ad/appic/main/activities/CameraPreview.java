@@ -1,9 +1,11 @@
 package adventures.ad.appic.main.activities;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -11,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -28,7 +31,6 @@ public class CameraPreview extends Activity {
     private boolean healthZero = true;
 
     private Player mPlayer;
-
     private AnimationDrawable testAnimation;
 
     @Override
@@ -46,6 +48,14 @@ public class CameraPreview extends Activity {
         animationImage.setBackgroundResource(R.drawable.animation_test);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus){
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            testAnimation.start();
+        }
     }
 
     @Override
@@ -100,14 +110,6 @@ public class CameraPreview extends Activity {
         }
 
         return (result);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus){
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-           testAnimation.start();
-        }
     }
 
     private void initPreview(int width, int height) {
@@ -185,7 +187,7 @@ public class CameraPreview extends Activity {
         }
     };
 
-    @Override
+ /*   @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (healthZero) {
@@ -196,5 +198,14 @@ public class CameraPreview extends Activity {
         }
 
         return super.onTouchEvent(event);
-    }
+    }*/
+
+    public void win(View view){
+            if (healthZero) {
+                healthZero = false;
+                MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
+                messagebox.setPlayer(mPlayer);
+                messagebox.popMessage();
+            }
+        }
 }

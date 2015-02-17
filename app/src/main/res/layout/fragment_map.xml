@@ -14,6 +14,7 @@
         android:layout_gravity="right|center_vertical"
         android:layout_toRightOf="@+id/tvEvents"
         android:layout_marginLeft="100dp"
+        android:src="@drawable/map"
     />
     <!--android:src="@drawable/maps"-->
 
