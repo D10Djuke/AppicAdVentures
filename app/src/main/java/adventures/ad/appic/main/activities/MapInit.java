@@ -153,4 +153,37 @@ public class MapInit extends FragmentActivity {
         }
         return events;
     }
+
+    public boolean inRange(Location loc, Marker marker){
+        int distance = 50; //distance in meter
+        Location dest = new Location("");
+        dest.setLatitude(marker.getPosition().latitude);
+        dest.setLongitude(marker.getPosition().longitude);
+        float curDistance = loc.distanceTo(dest);
+
+        if (curDistance <= distance)
+           return true;
+        return false;
+    }
+
+    public boolean isFacing(Location loc, Marker marker){
+        float bearingTo;
+        float bearing = loc.getBearing();
+        int accuracy = 10; //accuracy in degrees
+        Location dest = new Location("");
+        dest.setLatitude(marker.getPosition().latitude);
+        dest.setLongitude(marker.getPosition().longitude);
+        bearingTo = loc.bearingTo(dest);
+
+        if (bearingTo < 0){
+            bearingTo = 360 + bearingTo;
+        }
+        if (bearing < 0 ) {
+            bearing = 360 + bearing;
+        }
+
+        if(-accuracy <= (bearing - bearingTo) && (bearing - bearingTo) <= accuracy )
+            return true;
+        return false;
+    }
 }

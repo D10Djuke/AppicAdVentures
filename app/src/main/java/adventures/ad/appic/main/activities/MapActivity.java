@@ -202,21 +202,21 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                     mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
-                            int distance = 5000;
-                            Location dest = new Location("");
-                            dest.setLatitude(marker.getPosition().latitude);
-                            dest.setLongitude(marker.getPosition().longitude);
-                            float curDistance = loc.distanceTo(dest);
-
 
                             if (mapInit.checkLocationService(locationManager)) {
-                                if (curDistance <= distance) {
-                                    Intent i = new Intent(MapActivity.this, CameraPreview.class);
-                                    i.putExtra("mPlayer", mPlayer);
-                                    MapActivity.this.startActivity(i);
+                                if (mapInit.inRange(loc, marker)) {
+                                    if (mapInit.isFacing(loc, marker)) {
+                                        Intent i = new Intent(MapActivity.this, CameraPreview.class);
+                                        i.putExtra("mPlayer", mPlayer);
+                                        MapActivity.this.startActivity(i);
+                                    }
+                                        else{
+                                            MessageBox message = new MessageBox("Target out of sight", "Please face the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
+                                            message.popMessage();
+                                        }
                                 }
                                 else{
-                                    MessageBox message = new MessageBox("Target out of range", "Current distance is " + curDistance + " meters. \nPlease get within 5 meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
+                                    MessageBox message = new MessageBox("Target out of range", "Please get within 5 meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                     message.popMessage();
                                 }
                             } else {
