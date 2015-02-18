@@ -65,9 +65,15 @@ public class CameraPreview extends Activity {
         animationImage.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
-                  xOff = event.getX();
-                  yOff = event.getY();
-                return true;
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    xOff = event.getX();
+                    yOff = event.getY();
+                    Log.d("x: ", xOff + "");
+                    Log.d("y: ", yOff + "");
+                    attackEnemy(v);
+                    return true;
+                }
+                return false;
             }
         });
         init();
@@ -234,7 +240,10 @@ public class CameraPreview extends Activity {
            if (damageDone > 0) {
                mCreature.takeDamage(damageDone);
                final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
-               toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, (int)xOff, (int)yOff);
+               Log.d("top: ", Gravity.TOP + "");
+               Log.d("mid: ", Gravity.CENTER_VERTICAL + "");
+               Log.d("bot: ", Gravity.BOTTOM + "");
+               toast.setGravity(Gravity.START | Gravity.TOP, (int)xOff, (int)yOff+(2*Gravity.BOTTOM));
                toast.show();
 
                Handler handler = new Handler();

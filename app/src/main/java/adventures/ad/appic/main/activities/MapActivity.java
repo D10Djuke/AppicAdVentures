@@ -205,18 +205,18 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
                             if (mapInit.checkLocationService(locationManager)) {
                                 if (mapInit.inRange(loc, marker)) {
-                                    if (mapInit.isFacing(loc, marker)) {
+                                   // if (mapInit.isFacing(loc, marker)) { //compass not accurate enough yet
                                         Intent i = new Intent(MapActivity.this, CameraPreview.class);
                                         i.putExtra("mPlayer", mPlayer);
                                         MapActivity.this.startActivity(i);
-                                    }
+                                 /*   }
                                         else{
                                             MessageBox message = new MessageBox("Target out of sight", "Please face the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                             message.popMessage();
-                                        }
+                                        }*/
                                 }
                                 else{
-                                    MessageBox message = new MessageBox("Target out of range", "Please get within 5 meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
+                                    MessageBox message = new MessageBox("Target out of range", "Please get within 50 meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                     message.popMessage();
                                 }
                             } else {
