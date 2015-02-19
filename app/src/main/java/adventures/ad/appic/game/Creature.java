@@ -92,7 +92,7 @@ public class Creature implements Character{
                 break;
         }
 
-        stats.set(0, Integer.toString(100));
+        stats.set(0, Integer.toString(level * Integer.parseInt(stats.get(5))* 2 ));
         stats.set(1, Integer.toString(level * level * (Integer.parseInt(stats.get(4)) * 4 + elementType ) / 256));
         stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
     }

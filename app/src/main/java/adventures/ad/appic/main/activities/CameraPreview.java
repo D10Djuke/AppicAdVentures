@@ -92,8 +92,6 @@ public class CameraPreview extends Activity {
     public void onResume() {
         super.onResume();
 
-
-
         int cameraId = -1;
 
         for(int i = 0; i < Camera.getNumberOfCameras();i++){

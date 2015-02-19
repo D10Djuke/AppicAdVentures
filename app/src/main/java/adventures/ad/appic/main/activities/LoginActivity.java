@@ -37,40 +37,37 @@ public class LoginActivity extends FragmentActivity{
 
     public void login(View view) {
 
-        EditText passText = (EditText) findViewById(R.id.passwordEditText);
-
         Boolean trueUser = true;
         //Boolean trueUser = new Connection(getApplicationContext()).confirmUser(user, passText.getText().toString());
 
         if(trueUser) {
 
             //String characterData = new Connection(getApplicationContext()).getCharacter(user);
-            String characterData = "APPIC;Guido;5;10";
-
-            DataManager dataM = new DataManager(characterData, getApplicationContext());
-            Player player = dataM.getmPlayer();
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            i.putExtra("mPlayer", player);
-            startActivity(i);
+            login();
         }else{
-            new MessageBox("No Account Found", "No account could be found linked to your google-id. Do you wish to create one?", MessageBox.Type.MESSAGE_BOX,this).popMessage();
+            new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,this).popMessage();
         }
     }
 
     public void createNewAccount(View view) {
-        // TODO create new account
+        new MessageBox("New Account", "Please choose a character name", MessageBox.Type.NEWACCOUNT_BOX, this).popMessage();
+    }
+
+    public void changeAccount(View view){
+        new MessageBox("Change Account", "Please choose an account", MessageBox.Type.ACCOUNTPICK_BOX, this).popMessage();
+    }
+
+    public void changeUserName(String user){
+        TextView t = (TextView) findViewById(R.id.usernameTextView);
+        t.setText(user);
     }
 
     public String getUsername() {
         AccountManager manager = AccountManager.get(this);
-        Account[] accounts = manager.getAccounts();
-        //Account[] accounts = manager.getAccountsByType("com.google");
+        Account[] accounts = manager.getAccountsByType("com.google");
         List<String> possibleEmails = new LinkedList<String>();
 
         for (Account account : accounts) {
-            // TODO: Check possibleEmail against an email regex or treat
-            // account.name as an email address only for certain account.type
-            // values.
             possibleEmails.add(account.name);
         }
 
@@ -85,28 +82,18 @@ public class LoginActivity extends FragmentActivity{
             return null;
     }
 
-    private class StableArrayAdapter extends ArrayAdapter<String> {
+    private void login(){
+        String characterData = "APPIC;Guido;5;10";
 
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+        DataManager dataM = new DataManager(characterData, getApplicationContext());
+        Player player = dataM.getmPlayer();
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        i.putExtra("mPlayer", player);
+        startActivity(i);
+    }
 
-        public StableArrayAdapter(Context context, int textViewResourceId,
-                                  List<String> objects) {
-            super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            String item = getItem(position);
-            return mIdMap.get(item);
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
+    public void createNew(String name){
+        //TODO write connenction "create new user"
+        login();
     }
 }
