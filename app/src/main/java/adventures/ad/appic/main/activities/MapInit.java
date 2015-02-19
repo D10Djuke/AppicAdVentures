@@ -156,16 +156,13 @@ public class MapInit extends FragmentActivity {
         return events;
     }
 
-    public boolean inRange(Location loc, Marker marker){
-        int distance = 50; //distance in meter
+    public float rangeTo(Location loc, Marker marker){
         Location dest = new Location("");
         dest.setLatitude(marker.getPosition().latitude);
         dest.setLongitude(marker.getPosition().longitude);
         float curDistance = loc.distanceTo(dest);
 
-        if (curDistance <= distance)
-           return true;
-        return false;
+        return curDistance;
     }
 
     public boolean isFacing(Location loc, Marker marker){

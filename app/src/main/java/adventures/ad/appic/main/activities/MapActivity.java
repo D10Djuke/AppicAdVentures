@@ -44,6 +44,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
     final int CONNECTIONATTEMPTS = 1000;
+    final int DISTANCE = 50; //distance in meters
     final int[] c = {0};
     private Player mPlayer;
     private Connection con = null;
@@ -204,7 +205,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                         public void onInfoWindowClick(Marker marker) {
 
                             if (mapInit.checkLocationService(locationManager)) {
-                                if (mapInit.inRange(loc, marker)) {
+                                int currentDistance = (int)mapInit.rangeTo(loc, marker);
+                                if (currentDistance <= DISTANCE) {
                                    // if (mapInit.isFacing(loc, marker)) { //compass not accurate enough yet
                                         Intent i = new Intent(MapActivity.this, CameraPreview.class);
                                         i.putExtra("mPlayer", mPlayer);
@@ -216,7 +218,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                                         }*/
                                 }
                                 else{
-                                    MessageBox message = new MessageBox("Target out of range", "Please get within 50 meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
+                                    MessageBox message = new MessageBox("Target out of range", "You are " + currentDistance + " meters away from the target. \nPlease get within " + DISTANCE + " meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                     message.popMessage();
                                 }
                             } else {
