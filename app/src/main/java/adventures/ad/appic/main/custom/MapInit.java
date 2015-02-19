@@ -1,4 +1,4 @@
-package adventures.ad.appic.main.activities;
+package adventures.ad.appic.main.custom;
 
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.main.activities.MainActivity;
 import adventures.ad.appic.main.custom.MessageBox;
 import adventures.ad.appic.web.Connection;
 
@@ -165,9 +166,8 @@ public class MapInit extends FragmentActivity {
         return curDistance;
     }
 
-    public boolean isFacing(Location loc, Marker marker){
+    public boolean isFacing(Location loc, Marker marker, float bearing){
         float bearingTo;
-        float bearing = loc.getBearing();
         int accuracy = 10; //accuracy in degrees
         Location dest = new Location("");
         dest.setLatitude(marker.getPosition().latitude);

@@ -28,7 +28,7 @@ import adventures.ad.appic.game.Creature;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
 
-public class CameraPreview extends Activity {
+public class CameraActivity extends Activity {
     private SurfaceView preview = null;
     private SurfaceHolder previewHolder = null;
     private Camera camera = null;
@@ -56,7 +56,7 @@ public class CameraPreview extends Activity {
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        mCreature = new Creature(Creature.Dificulity.EASY, "Dolfje", mPlayer, Creature.Element.FIRE);
+        mCreature = new Creature(Creature.Dificulity.HARD, "Dolfje", mPlayer, Creature.Element.FIRE);
 
         ImageView animationImage = (ImageView) findViewById(R.id.animationView);
         animationImage.setBackgroundResource(R.drawable.animation_test);

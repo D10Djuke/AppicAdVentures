@@ -1,4 +1,4 @@
-package adventures.ad.appic.main.activities;
+package adventures.ad.appic.main.custom;
 
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;

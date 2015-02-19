@@ -2,12 +2,17 @@ package adventures.ad.appic.main.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,27 +20,23 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
 
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.custom.MapInit;
 import adventures.ad.appic.main.custom.MessageBox;
 import adventures.ad.appic.web.Connection;
 
 import static java.lang.Thread.sleep;
 
-public class MapActivity extends FragmentActivity implements LocationListener {
+public class MapActivity extends FragmentActivity implements LocationListener, SensorEventListener {
 
     private GoogleMap mMap = null; // Might be null if Google Play services APK is not available.
    // private ArrayList<Marker> markers = new ArrayList<Marker>();
@@ -44,14 +45,18 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
     final int CONNECTIONATTEMPTS = 1000;
-    final int DISTANCE = 50; //distance in meters
+    final int DISTANCE = 5000; //distance in meters
     final int[] c = {0};
     private Player mPlayer;
     private Connection con = null;
+    private SensorManager sMan = null;
+    private Sensor gs;
+    private Sensor orientationSensor;
+    private float heading = 0f;
 
-   /* List circle;
-    private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-    PolygonOptions polygonOptions;*/
+    /* List circle;
+     private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+     PolygonOptions polygonOptions;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +67,30 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         con = new Connection(this);
         new DownloadFilesTask().execute();
+        sMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gs = sMan.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+
         setUpMapIfNeeded();
     }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if(Sensor.TYPE_GRAVITY == event.sensor.getType()){
+                float val = 0f;
+                val = event.values[2];
+                double h = (Math.sqrt((6.67428*Math.pow(10, -11))*5.972*Math.pow(10,24)/val))-6371000;
+            }
+            if(Sensor.TYPE_ORIENTATION == event.sensor.getType()){
+                heading = event.values[0];
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+
 
     private class DownloadFilesTask extends AsyncTask<Void, Void, Boolean> {
         protected void onPreExecute() {
@@ -132,6 +159,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     protected void onResume() {
         super.onResume();
         FirstLocation = true;
+        sMan.registerListener(this, gs, SensorManager.SENSOR_DELAY_FASTEST);
+        sMan.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
         setUpMapIfNeeded();
     }
 
@@ -207,15 +236,15 @@ public class MapActivity extends FragmentActivity implements LocationListener {
                             if (mapInit.checkLocationService(locationManager)) {
                                 int currentDistance = (int)mapInit.rangeTo(loc, marker);
                                 if (currentDistance <= DISTANCE) {
-                                   // if (mapInit.isFacing(loc, marker)) { //compass not accurate enough yet
-                                        Intent i = new Intent(MapActivity.this, CameraPreview.class);
+                                    if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
+                                        Intent i = new Intent(MapActivity.this, CameraActivity.class);
                                         i.putExtra("mPlayer", mPlayer);
                                         MapActivity.this.startActivity(i);
-                                 /*   }
+                                    }
                                         else{
                                             MessageBox message = new MessageBox("Target out of sight", "Please face the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                             message.popMessage();
-                                        }*/
+                                        }
                                 }
                                 else{
                                     MessageBox message = new MessageBox("Target out of range", "You are " + currentDistance + " meters away from the target. \nPlease get within " + DISTANCE + " meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
@@ -299,6 +328,12 @@ public class MapActivity extends FragmentActivity implements LocationListener {
     private void setUpMap() {
         //myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sMan.unregisterListener(this);
     }
 
     @Override

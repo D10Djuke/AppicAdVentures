@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
         if(isCameraInUsebyApp(cameraId)){
             new MessageBox("CameraError", "Your Camera is already in use", MessageBox.Type.ERROR_BOX, this);
         }else{
-            Intent i = new Intent(getApplicationContext(), CameraPreview.class);
+            Intent i = new Intent(getApplicationContext(), CameraActivity.class);
             startActivity(i);
         }
     }

@@ -33,6 +33,12 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
+        android:name="android.hardware.sensor.gravity"
+        android:required="true" />
+    <uses-feature
+    android:name="android.hardware.sensor.orientation"
+    android:required="true" />
+    <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature
@@ -119,7 +125,7 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
             </intent-filter>
         </activity>
         <activity
-            android:name="adventures.ad.appic.main.activities.CameraPreview"
+            android:name="adventures.ad.appic.main.activities.CameraActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_camera_preview" >
         </activity>
