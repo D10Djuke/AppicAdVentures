@@ -2,11 +2,17 @@ package adventures.ad.appic.main.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,12 +29,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Creature;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.custom.AR;
 import adventures.ad.appic.main.custom.MessageBox;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements SensorEventListener {
     private SurfaceView preview = null;
     private SurfaceHolder previewHolder = null;
     private Camera camera = null;
@@ -45,22 +55,38 @@ public class CameraActivity extends Activity {
     private float xOff = 0;
     private float yOff = 0;
 
+    private SensorManager sMan = null;
+    private Sensor orientationSensor;
+    private float heading = 0f;
+
+    private Location loc;
+    private LatLng marker;
+    private ImageView animationImage;
+    private int kwidth =0;
+    private int kheight =0;
+    private AR ar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
+        loc = (Location) intent.getParcelableExtra("mLoc");
+        marker = (LatLng) intent.getParcelableExtra("mMarker");
         setContentView(R.layout.activity_camerapreview);
         preview = (SurfaceView) findViewById(R.id.cpPreview);
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        sMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
         mCreature = new Creature(Creature.Dificulity.HARD, "Dolfje", mPlayer, Creature.Element.FIRE);
 
-        ImageView animationImage = (ImageView) findViewById(R.id.animationView);
+        animationImage = (ImageView) findViewById(R.id.animationView);
         animationImage.setBackgroundResource(R.drawable.animation_test);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
+
 
         animationImage.setOnTouchListener(new View.OnTouchListener() {
 
@@ -81,6 +107,24 @@ public class CameraActivity extends Activity {
     }
 
     @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(Sensor.TYPE_ORIENTATION == event.sensor.getType()){
+            heading = event.values[0];
+          //  animationImage.setY(ar.convertY());
+          //  animationImage.setX(ar.convertX(loc, heading));
+            animationImage.setScaleX(ar.scaling());
+            animationImage.setScaleY(ar.scaling());
+            //Log.e("Y", ar.convertY()+"");
+            //Log.e("X", ar.convertX(loc,heading) + "");
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus){
@@ -94,6 +138,8 @@ public class CameraActivity extends Activity {
 
         int cameraId = -1;
 
+        initPreview(kwidth, kheight);
+
         for(int i = 0; i < Camera.getNumberOfCameras();i++){
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
@@ -102,6 +148,8 @@ public class CameraActivity extends Activity {
             }
         }
         camera = Camera.open(cameraId);
+
+        sMan.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
         startPreview();
     }
 
@@ -116,6 +164,7 @@ public class CameraActivity extends Activity {
         inPreview = false;
 
         super.onPause();
+        sMan.unregisterListener(this);
     }
 
     private Camera.Size getBestPreviewSize(int width, int height,
@@ -160,6 +209,11 @@ public class CameraActivity extends Activity {
                     cameraConfigured = true;
                 }
             }
+            ar = new AR(camera, this, loc, marker);
+           // animationImage.setY(ar.convertY());
+           // animationImage.setX(ar.convertX(loc, heading));
+           // Log.e("Y", ar.convertY()+"");
+           // Log.e("X", ar.convertX(loc,heading) + "");
         }
     }
 
@@ -178,6 +232,8 @@ public class CameraActivity extends Activity {
         public void surfaceChanged(SurfaceHolder holder,
                                    int format, int width,
                                    int height) {
+            kwidth = width;
+            kheight = height;
             initPreview(width, height);
 
             Camera.Parameters parameters = camera.getParameters();

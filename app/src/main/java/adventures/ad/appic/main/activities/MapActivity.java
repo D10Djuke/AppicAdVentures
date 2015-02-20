@@ -20,6 +20,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,7 +72,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         gs = sMan.getDefaultSensor(Sensor.TYPE_GRAVITY);
         orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
     }
 
         @Override
@@ -98,16 +99,18 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         }
 
         protected Boolean doInBackground(Void... urls) {
-         //   con.getLocations();
+            con.getLocations();
+
 
             return false;
         }
 
         protected void onPostExecute(Boolean result) {
 
-           // MessageBox message = new MessageBox("NO SIGNAL", con.getLocationlist().get(0).getName(), MessageBox.Type.TEST_BOX, MapActivity.this);
-        /*    MessageBox message = new MessageBox("test", loc.toString() + " ",  MessageBox.Type.MESSAGE_BOX, MapActivity.this);
-            message.popMessage();*/
+            setUpMapIfNeeded();
+            //MessageBox message = new MessageBox("NO SIGNAL", con.getLocationlist().get(0).getName(), MessageBox.Type.TEST_BOX, MapActivity.this);
+            //MessageBox message = new MessageBox("test", loc.toString() + " ",  MessageBox.Type.MESSAGE_BOX, MapActivity.this);
+           // message.popMessage();
         }
     }
 
@@ -161,7 +164,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         FirstLocation = true;
         sMan.registerListener(this, gs, SensorManager.SENSOR_DELAY_FASTEST);
         sMan.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        setUpMapIfNeeded();
+        new DownloadFilesTask().execute();
+       // setUpMapIfNeeded();
     }
 
     /**
@@ -199,11 +203,14 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
                         // Defines the contents of the InfoWindow
                         @Override
-                        public View getInfoContents(Marker arg0) {
+                        public View getInfoContents(Marker marker) {
+                            double x = marker.getPosition().longitude;
+                            double y = marker.getPosition().latitude;
 
                             // Getting view from the layout file info_window_layout
                             View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
-                           // ((TextView) findViewById(R.id.tvName)).setText(con.getLocation(arg0.getPosition()).getName());
+                            ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
+                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());
                             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
                             if (display.getRotation() == Surface.ROTATION_0) {
@@ -239,6 +246,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
                                     if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
                                         Intent i = new Intent(MapActivity.this, CameraActivity.class);
                                         i.putExtra("mPlayer", mPlayer);
+                                        i.putExtra("mLoc", loc);
+                                        i.putExtra("mMarker", marker.getPosition());
                                         MapActivity.this.startActivity(i);
                                     }
                                         else{
@@ -306,7 +315,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
                         });
                         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                         mapInit.initMarkers(mMap, con);
-
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.93813318, 5.34826098),11));
                        // new InitTask().execute();
                     }
                 }

@@ -39,14 +39,14 @@ public class MapInit extends FragmentActivity {
 
 
     public void initMarkers(GoogleMap mMap, Connection con) {
-      /*  for(int i = 0; i < con.getLocationlist().size(); i++) {
-            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(con.getLocationlist().get(i).getCoordx()), Double.parseDouble(con.getLocationlist().get(i).getCoordy()))).title(con.getLocationlist().get(i).getName())));
-        }*/
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
+        for(int i = 0; i < con.getLocationlist().size(); i++) {
+            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(con.getLocationlist().get(i).getCoordy()), Double.parseDouble(con.getLocationlist().get(i).getCoordx()))).title(con.getLocationlist().get(i).getName())));
+        }
+      /*  markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.835884, 5.189746)).title("Ergens in St. Truiden")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(51.855321, 5.383759)).title("Random1")));
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(52.855321, 5.383759)).title("Random2")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.856450, 5.381367)).title("Random1")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.917033, 5.342780)).title("Random2")));*/
 
         for (int i = 0; i < markers.size(); i++) {
             markers.get(i).setVisible(false);
@@ -180,6 +180,9 @@ public class MapInit extends FragmentActivity {
         if (bearing < 0 ) {
             bearing = 360 + bearing;
         }
+
+        Log.e("bearin", bearing+"");
+        Log.e("bearinto", bearingTo+"");
 
         if(-accuracy <= (bearing - bearingTo) && (bearing - bearingTo) <= accuracy )
             return true;

@@ -86,6 +86,10 @@ public class Connection {
 
     public Location getLocation(LatLng crd){
         for(int i = 0; i < locationList.size(); i++) {
+            Log.d("x : ", "" +crd.longitude);
+            Log.d("y : ", "" +crd.latitude);
+            Log.d("xloc : ", "" +Double.parseDouble(locationList.get(i).getCoordx()));
+            Log.d("yloc : ", "" +Double.parseDouble(locationList.get(i).getCoordy()));
            if(Double.parseDouble(locationList.get(i).getCoordx()) == crd.longitude && Double.parseDouble(locationList.get(i).getCoordy()) == crd.latitude){
                 return locationList.get(i);
             }
@@ -107,8 +111,8 @@ public class Connection {
             Log.i("test", "test");
             if(read != null)
             {
-                JSONObject json = new JSONObject(read);
-                locations = json.getJSONArray("locations");
+                //JSONObject json = new JSONObject(read);
+                locations = new JSONArray(read);
                 for (int i = 0; i < locations.length(); i++) {
                     JSONObject c = locations.getJSONObject(i);
 
@@ -213,6 +217,8 @@ public class Connection {
                     builder.append(line);
                     Log.i("test3", "test3");
                 }
+                content.close();
+                entity.consumeContent();
                 Log.i("test4", "test4");
             } else {
                // Log.e(ParseJSON.class.toString(), "Failed to download file");
