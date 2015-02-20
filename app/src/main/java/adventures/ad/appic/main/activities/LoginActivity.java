@@ -2,14 +2,19 @@ package adventures.ad.appic.main.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,7 +28,15 @@ import adventures.ad.appic.web.Connection;
 
 public class LoginActivity extends FragmentActivity{
 
-    String user;
+    private String user;
+    private ProgressDialog mProgressDialog;
+    private Connection con;
+    private Player player;
+    private String charName;
+    private int userId;
+
+    private JSONObject playerObj;
+    private JSONObject userObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +49,8 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void login(View view) {
-
-        Boolean trueUser = true;
-        //Boolean trueUser = new Connection(getApplicationContext()).confirmUser(user, passText.getText().toString());
-
-        if(trueUser) {
-
-            //String characterData = new Connection(getApplicationContext()).getCharacter(user);
-            login();
-        }else{
-            new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,this).popMessage();
-        }
+        con = new Connection(this);
+        new DownloadFilesTask().execute();
     }
 
     public void createNewAccount(View view) {
@@ -82,18 +86,103 @@ public class LoginActivity extends FragmentActivity{
             return null;
     }
 
-    private void login(){
-        String characterData = "APPIC;Guido;5;10";
-
+    public void login(String characterData){
         DataManager dataM = new DataManager(characterData, getApplicationContext());
-        Player player = dataM.getmPlayer();
+        player = dataM.getmPlayer();
+
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         i.putExtra("mPlayer", player);
         startActivity(i);
     }
 
     public void createNew(String name){
-        //TODO write connenction "create new user"
-        login();
+
+        charName = name;
+
+        con = new Connection(this);
+        new CreateFilesTask().execute();
+        new DownloadFilesTask().execute();
+    }
+
+    private class CreateFilesTask extends AsyncTask<Void, Void, Void> {
+
+        protected void onPreExecute(String userName) {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(LoginActivity.this);
+            mProgressDialog.setTitle("Creating");
+            mProgressDialog.setMessage("Loading..");
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            String createFlag = "USER";
+
+            int trueUser = new Connection(getApplicationContext()).confirmUser(charName);
+
+            userObj = new JSONObject();
+            playerObj = new JSONObject();
+            try {
+                userObj.put("name", user);
+                userObj.put("googleID", user);
+
+                playerObj.put("name", charName);
+                playerObj.put("userId", trueUser);
+
+            } catch (JSONException e) {
+                new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, LoginActivity.this).popMessage();
+            }
+
+            if(trueUser != -1){
+                new Connection(getApplicationContext()).create(userObj, createFlag);
+
+                createFlag = "CHARACTER";
+                new Connection(getApplicationContext()).create(playerObj, createFlag);
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            if(mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
+
+            login(result);
+        }
+    }
+
+    private class DownloadFilesTask extends AsyncTask<Void, Void, String> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(LoginActivity.this);
+            mProgressDialog.setTitle("Getting UserData");
+            mProgressDialog.setMessage("Loading..");
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.show();
+        }
+
+        protected String doInBackground(Void... urls) {
+            int trueUser = new Connection(getApplicationContext()).confirmUser(user);
+
+            String result = "default";
+
+            if(trueUser >= 0) {
+                result = new Connection(getApplicationContext()).getPlayerData(trueUser);
+            }else{
+                mProgressDialog.dismiss();
+                new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,LoginActivity.this).popMessage();
+            }
+            return result;
+        }
+
+        protected void onPostExecute(String result) {
+           if(mProgressDialog != null) {
+               mProgressDialog.dismiss();
+           }
+
+            login(result);
+        }
     }
 }

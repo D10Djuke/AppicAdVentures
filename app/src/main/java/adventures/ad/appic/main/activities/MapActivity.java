@@ -1,5 +1,6 @@
 package adventures.ad.appic.main.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -54,6 +55,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private Sensor gs;
     private Sensor orientationSensor;
     private float heading = 0f;
+    private ProgressDialog mProgressDialog;
 
     /* List circle;
      private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
@@ -95,19 +97,23 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
     private class DownloadFilesTask extends AsyncTask<Void, Void, Boolean> {
         protected void onPreExecute() {
-
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(MapActivity.this);
+            mProgressDialog.setTitle("Getting Locations");
+            mProgressDialog.setMessage("Loading..");
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.show();
         }
 
         protected Boolean doInBackground(Void... urls) {
             con.getLocations();
-
-
             return false;
         }
 
         protected void onPostExecute(Boolean result) {
 
             setUpMapIfNeeded();
+            mProgressDialog.dismiss();
             //MessageBox message = new MessageBox("NO SIGNAL", con.getLocationlist().get(0).getName(), MessageBox.Type.TEST_BOX, MapActivity.this);
             //MessageBox message = new MessageBox("test", loc.toString() + " ",  MessageBox.Type.MESSAGE_BOX, MapActivity.this);
            // message.popMessage();

@@ -54,13 +54,23 @@ public class MessageBox{
         TEST_BOX,
         VICTORY_BOX,
         ACCOUNTPICK_BOX,
-        NEWACCOUNT_BOX
+        NEWACCOUNT_BOX,
+        STANDARD_ERROR_BOX
     }
 
 
     public MessageBox(String title, String s, Type type, Context context){
         this.title = title;
         this.s = s;
+        this.context = context;
+
+        setMessageType(type);
+
+    }
+
+    public MessageBox(Type type, Context context){
+        title = "title comes here";
+        s = "message comes here";
         this.context = context;
 
         setMessageType(type);
@@ -75,6 +85,22 @@ public class MessageBox{
     private void setMessageType(Type type){
 
         switch (type.toString()){
+            case "STANDARD_ERROR_BOX":
+
+                aBuilder = new AlertDialog.Builder(context);
+                aBuilder.setMessage("We're terribly sorry, but something went wrong. \n Please restart the application.");
+                aBuilder.setTitle("Oops");
+                aBuilder.setCancelable(false);
+
+                aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.exit(0);
+                    }
+                });
+
+                messageBox = aBuilder.create();
             case "ERROR_BOX":
 
                 aBuilder = new AlertDialog.Builder(context);
