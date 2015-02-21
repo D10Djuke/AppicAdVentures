@@ -117,11 +117,13 @@ public class CameraActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (Sensor.TYPE_ORIENTATION == event.sensor.getType()) {
             heading = event.values[0];
-            //animationImage.setY(10);
+
             //animationImage.setX(100);
-            //animationImage.setScaleX(ar.scaling());
-            //animationImage.setScaleY(ar.scaling());
-            //Log.e("Y", ar.convertY()+"");
+           /* animationImage.setScaleX(ar.scaling());
+            animationImage.setScaleY(ar.scaling());
+            animationImage.setY(830);
+            Log.e("screensize: ", ar.displayHeight+"");
+            Log.e("Y", ar.convertY()+"");*/
             //Log.e("X", ar.convertX(loc,heading) + "");
         }
     }
@@ -294,6 +296,20 @@ public class CameraActivity extends Activity implements SensorEventListener {
     }
 
     private void attackPlayer() {
+        if(mPlayer.getHitPoints() > 0) {
+            int damageDone = mCreature.dealDamage(mPlayer);
+            if (damageDone > 0) {
+                mPlayer.takeDamage(damageDone);
+            }
+
+            Log.e("hp: " , ""+mPlayer.getHitPoints());
+            if (mPlayer.getHitPoints() <= 0) {
+                mPlayer.setHitPoints(0);
+                loss();
+            } else {
+                //setHealth();
+            }
+        }
 
     }
 
@@ -335,12 +351,19 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 win();
             } else {
                 setHealth();
+                attackPlayer();
             }
         }
     }
 
     public void win() {
         MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
+        messagebox.setPlayer(mPlayer);
+        messagebox.popMessage();
+    }
+
+    public void loss() {
+        MessageBox messagebox = new MessageBox("YOU LOSE!", "Defeat!", MessageBox.Type.DEFEAT_BOX, this);
         messagebox.setPlayer(mPlayer);
         messagebox.popMessage();
     }

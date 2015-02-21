@@ -47,7 +47,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
     final int CONNECTIONATTEMPTS = 1000;
-    final int DISTANCE = 5000; //distance in meters
+    final int DISTANCE = 50; //distance in meters
     final int[] c = {0};
     private Player mPlayer;
     private Connection con = null;
@@ -224,8 +224,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
                             // Getting view from the layout file info_window_layout
                             View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
-                         /*   ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
-                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());*/
+                            ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
+                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());
                             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
                             if (display.getRotation() == Surface.ROTATION_0) {

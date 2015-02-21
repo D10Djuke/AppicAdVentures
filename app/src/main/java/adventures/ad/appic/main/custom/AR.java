@@ -21,7 +21,7 @@ public class AR {
     private float verticalFOV;
     private float camAspect;
     private float displayWidth;
-    private float displayHeight;
+    public float displayHeight;
     private float displayAspect;
     private float trueVerticalFOV;
     private float trueHorizontalFOV;
@@ -89,7 +89,9 @@ public class AR {
     public float convertY(){
         float result = 0;
 
-        result = (float) (((MAXVIEWDISTANCEY-blindSpotY)/displayHeight)*trueDistance);
+        result = (float)(displayHeight - (((((displayHeight/2)-285)*100)/MAXVIEWDISTANCEY)*distance));
+
+      //  result = (float) (((MAXVIEWDISTANCEY-blindSpotY)/displayHeight)*trueDistance);
 
         return result;
     }

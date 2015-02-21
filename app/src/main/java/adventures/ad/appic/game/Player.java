@@ -51,8 +51,8 @@ public class Player extends Character implements Parcelable {
     }
 
     @Override
-    public void takeDamage(int damage){
-
+    public void takeDamage(int damage) {
+        setHitPoints(getHitPoints() - damage);
     }
 
     @Override

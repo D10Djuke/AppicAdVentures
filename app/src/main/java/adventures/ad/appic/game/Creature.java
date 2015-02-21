@@ -25,6 +25,7 @@ public class Creature extends Character{
     protected Location loc;
     protected Dificulity diff;
     protected Element element;
+    protected Stance stance = Stance.IDLE;
 
     protected AnimationDrawable testAnimation = null;
 
@@ -35,6 +36,11 @@ public class Creature extends Character{
         NORMAL,
         HARD,
         MASTER
+    }
+
+    public enum Stance{
+        IDLE,
+        ATTACK
     }
 
     public enum Element{
@@ -109,15 +115,36 @@ public class Creature extends Character{
         return testAnimation;
     }
 
-    public int setAttackAnimation(Context c){
+    public int setIdleAnimation(Context c){
 
         String packageName = c.getPackageName();
 
-        String s = "img_creature_" + name + "_atk";
+        String s = "anim_creature_" + name + "_idle";
         Log.e("stance" , s);
         int resId = c.getResources().getIdentifier( s, "drawable", packageName);
 
         return resId;
+    }
+
+    public int setAttackAnimation(Context c){
+
+        String packageName = c.getPackageName();
+
+        String s = "anim_creature_" + name + "_atk";
+        Log.e("stance" , s);
+        int resId = c.getResources().getIdentifier( s, "drawable", packageName);
+
+        return resId;
+
+
+    }
+
+    public void setStance(Stance stance){
+        this.stance = stance;
+    }
+
+    public Stance getStance(){
+        return stance;
     }
 
     public int getLevel(){
@@ -137,8 +164,8 @@ public class Creature extends Character{
     }
 
     public int dealDamage(Player player){
-        int damage = 0;
-        return damage;
+        double damage = Math.random()*26;
+        return (int)damage;
     }
 
     @Override
