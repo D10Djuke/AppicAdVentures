@@ -89,10 +89,9 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
-        idleAnimation =  mCreature.setIdleAnimation(getApplicationContext());
         attackAnimation = mCreature.setAttackAnimation(getApplicationContext());
 
-        animationImage.setBackgroundResource(R.drawable.anim_hugbear_idle);
+        animationImage.setBackgroundResource(R.drawable.anim_hugbear_atk);
         anim = (AnimationDrawable) animationImage.getBackground();
 
         animationImage.setOnTouchListener(new View.OnTouchListener() {
@@ -137,7 +136,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             anim.start();
-            runOnUiThread(new AITread());
         }
     }
 
@@ -292,27 +290,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
         double currHealth = mCreature.getHealth();
         double maxHealth = mCreature.getStat(0);
 
-
         bar.setProgress((int) ((currHealth / maxHealth) * 100));
     }
 
     private void attackPlayer() {
-
-        anim.stop();
-
-        if (mCreature.getStance() == Creature.Stance.IDLE) {
-            mCreature.setStance(Creature.Stance.ATTACK);
-
-            animationImage.setBackgroundResource(R.drawable.anim_hugbear_atk);
-            anim = (AnimationDrawable) animationImage.getBackground();
-
-        } else {
-            mCreature.setStance(Creature.Stance.IDLE);
-            animationImage.setBackgroundResource(R.drawable.anim_hugbear_idle);
-            anim = (AnimationDrawable) animationImage.getBackground();
-        }
-
-        anim.start();
 
     }
 
@@ -363,21 +344,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
         messagebox.setPlayer(mPlayer);
         messagebox.popMessage();
     }
-
-    private class AITread extends Thread{
-
-        @Override
-        public void run(){
-            try {
-                while (true) {
-                    sleep(5000);
-                    attackPlayer();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
 
 }

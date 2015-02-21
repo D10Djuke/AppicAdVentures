@@ -36,8 +36,8 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
         android:name="android.hardware.sensor.gravity"
         android:required="true" />
     <uses-feature
-    android:name="android.hardware.sensor.orientation"
-    android:required="true" />
+        android:name="android.hardware.sensor.orientation"
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -64,6 +64,10 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
         android:normalScreens="true"
         android:smallScreens="false"
         android:xlargeScreens="true" />
+
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -132,8 +136,7 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
         <activity
             android:name="adventures.ad.appic.main.activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -144,6 +147,10 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="adventures.ad.appic.main.activities.VoucherActivity"
+            android:label="@string/title_activity_voucher" >
         </activity>
     </application>
 
