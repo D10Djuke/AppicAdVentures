@@ -60,7 +60,8 @@ public class MessageBox{
         FLEE_BOX,
         VOUCHER_BOX,
         CHARIMG_BOX,
-        ITEM_BOX
+        ITEM_BOX,
+        DEFEAT_BOX
     }
 
 
@@ -202,6 +203,24 @@ public class MessageBox{
                         Intent i = new Intent(context, InventoryActivity.class);
                         i.putExtra("mPlayer", mPlayer);
                         context.startActivity(i);
+                    }
+                });
+
+                messageBox = aBuilder.create();
+
+            break;
+            case "DEFEAT_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                aBuilder.setMessage(s);
+                aBuilder.setTitle(title);
+                aBuilder.setCancelable(false);
+
+                aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        messageBox.dismiss();
+                        ((Activity) context).finish();
                     }
                 });
 
