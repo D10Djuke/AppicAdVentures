@@ -111,6 +111,7 @@ public class Item implements Parcelable{
     }
 
     public void setType(String itemType){
+        this.itemType = itemType;
         switch (itemType){
             case "00":
                 type = Type.WEAPON;

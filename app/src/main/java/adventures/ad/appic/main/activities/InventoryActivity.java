@@ -53,13 +53,15 @@ public class InventoryActivity extends ActionBarActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
+                Log.d("here", ""+position);
+
                 selectedItem = mPlayer.getInventory().get(position);
                 selectedIndex = position;
 
-                if(mPlayer.getInventory().get(position).getItemType() != Item.Type.VOUCHER){
-                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "What do you want to do?", MessageBox.Type.ITEM_BOX, InventoryActivity.this);
+                if(!mPlayer.getInventory().get(position).getIconSource().equals("ico04")){
+                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "What do you want to do?", MessageBox.Type.ITEM_BOX, InventoryActivity.this).popMessage();
                 }else{
-                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "Please enter a valid code", MessageBox.Type.VOUCHER_BOX, InventoryActivity.this);
+                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "Please enter a valid code", MessageBox.Type.VOUCHER_BOX, InventoryActivity.this).popMessage();
                 }
             }
         });
@@ -131,6 +133,7 @@ public class InventoryActivity extends ActionBarActivity {
 
         public ImageAdapter(Context c, ArrayList<Item> inventory) {
             mContext = c;
+            values = new Item[inventory.size()];
             values = inventory.toArray(values);
         }
 
@@ -150,14 +153,15 @@ public class InventoryActivity extends ActionBarActivity {
                 // set image based on selected text
                 ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
 
+                Log.d("test: ", ""+ values[position].getIconSource());
                 switch (values[position].getIconSource()) {
-                    case "00":
+                    case "ico00":
                         imageView.setImageResource(R.drawable.ico00);
                         break;
-                    case "03":
+                    case "ico03":
                         imageView.setImageResource(R.drawable.ico03);
                         break;
-                    case "04":
+                    case "ico04":
                         imageView.setImageResource(R.drawable.ico04);
                         break;
                 }
