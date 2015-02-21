@@ -50,7 +50,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     private Player mPlayer;
     private Creature mCreature;
-    private AnimationDrawable testAnimation;
+
+    private int idleAnimation;
+    private int attackAnimation;
+    private AnimationDrawable anim;
 
     private ProgressBar bar;
 
@@ -86,8 +89,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
-        mCreature.setAnimation(animationImage);
-        testAnimation = mCreature.getAnim();
+        idleAnimation =  mCreature.setIdleAnimation(animationImage, getApplicationContext());
+        attackAnimation = mCreature.setAttackAnimation(animationImage, getApplicationContext());
+
+        animationImage.setBackgroundResource(idleAnimation);
+        anim = (AnimationDrawable) animationImage.getBackground();
 
         animationImage.setOnTouchListener(new View.OnTouchListener() {
 
@@ -103,8 +109,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 return false;
             }
         });
-
-
 
         init();
 
@@ -132,7 +136,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            testAnimation.start();
+            anim.start();
 
             runOnUiThread(new AITread());
         }
@@ -294,21 +298,23 @@ public class CameraActivity extends Activity implements SensorEventListener {
     }
 
     private void attackPlayer() {
-        testAnimation.stop();
+
+        anim.stop();
 
         if (mCreature.getStance() == Creature.Stance.IDLE) {
             mCreature.setStance(Creature.Stance.ATTACK);
+
+            animationImage.setBackgroundResource(attackAnimation);
+            anim = (AnimationDrawable) animationImage.getBackground();
+
         } else {
             mCreature.setStance(Creature.Stance.IDLE);
+            animationImage.setBackgroundResource(idleAnimation);
+            anim = (AnimationDrawable) animationImage.getBackground();
         }
-        testAnimation = null;
-        testAnimation = mCreature.changeAnimation(CameraActivity.this);
 
-        mCreature.setAnimation(animationImage);
+        anim.start();
 
-        animationImage.setBackgroundDrawable(testAnimation);
-
-        testAnimation.start();
     }
 
     public void attackEnemy(View view) {

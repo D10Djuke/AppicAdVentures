@@ -115,9 +115,29 @@ public class Creature extends Character{
         return testAnimation;
     }
 
-    public void setAnimation(ImageView animationImage){
-        animationImage.setBackgroundResource(R.drawable.anim_hugbear_idle);
-        testAnimation = (AnimationDrawable) animationImage.getBackground();
+    public int setIdleAnimation(ImageView img, Context c){
+
+        String packageName = c.getPackageName();
+
+        String s = "img_creature_" + name + "_atk";
+        Log.e("stance" , s);
+        int resId = c.getResources().getIdentifier( s, "drawable", packageName);
+
+        return resId;
+    }
+
+    public int setAttackAnimation(ImageView img, Context c){
+
+        String packageName = c.getPackageName();
+
+        String s = "img_creature_" + name + "_atk";
+        Log.e("stance" , s);
+        int resId = c.getResources().getIdentifier( s, "drawable", packageName);
+
+
+        return resId;
+
+
     }
 
     public void setStance(Stance stance){
@@ -126,36 +146,6 @@ public class Creature extends Character{
 
     public Stance getStance(){
         return stance;
-    }
-
-    public AnimationDrawable changeAnimation(Context c){
-
-        int[] sequenceIDLE = {1,2,1,4};
-        int[] sequenceATK = {1,2,3,4,3,2};
-        String packageName = c.getPackageName();
-
-
-        AnimationDrawable anim = new AnimationDrawable();
-        switch (stance){
-            case IDLE:
-                for(int i : sequenceIDLE){
-                    String s = "img_creature_" + name + "_idle" + i;
-                    Log.e("stance" , s);
-                    int resId = c.getResources().getIdentifier( s, "drawable", packageName);
-                    anim.addFrame(c.getResources().getDrawable(resId), 200);
-                }
-                break;
-            case ATTACK:
-                for(int i : sequenceATK){
-                    String s = "img_creature_" + name + "_atk" + i;
-                    Log.e("stance" , s);
-                    int resId = c.getResources().getIdentifier( s, "drawable", packageName);
-                    anim.addFrame(c.getResources().getDrawable(resId), 200);
-                }
-                break;
-        }
-        anim.setOneShot(true);
-        return anim;
     }
 
     public int getLevel(){
