@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,7 @@ public class InventoryActivity extends ActionBarActivity {
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
 
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory()));
         setOnclick();
 
     }
@@ -80,7 +81,7 @@ public class InventoryActivity extends ActionBarActivity {
     public void destroyItem(){
         mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory()));
         setOnclick();
     }
 
@@ -126,52 +127,62 @@ public class InventoryActivity extends ActionBarActivity {
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
+        private Item[] values;
 
-        public ImageAdapter(Context c) {
+        public ImageAdapter(Context c, ArrayList<Item> inventory) {
             mContext = c;
+            values = inventory.toArray(values);
+        }
 
-            ArrayList<Integer> tempArr = new ArrayList<Integer>();
-            for(Item i: mPlayer.getInventory()){
-                String packageName = c.getPackageName();
-                int resId = c.getResources().getIdentifier(i.getIconSource(), "drawable", packageName);
-                tempArr.add(resId);
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View gridView;
+
+            if (convertView == null) {
+
+                gridView = new View(mContext);
+
+                // get layout from mobile.xml
+                gridView = inflater.inflate(R.layout.grid_inventory, null);
+
+                // set image based on selected text
+                ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
+
+                switch (values[position].getIconSource()) {
+                    case "00":
+                        imageView.setImageResource(R.drawable.ico00);
+                        break;
+                    case "03":
+                        imageView.setImageResource(R.drawable.ico03);
+                        break;
+                    case "04":
+                        imageView.setImageResource(R.drawable.ico04);
+                        break;
+                }
+
+            } else {
+                gridView = (View) convertView;
             }
-            mThumbIds = new Integer[tempArr.size()];
-            mThumbIds = tempArr.toArray(mThumbIds);
 
-
-
+            return gridView;
         }
 
+        @Override
         public int getCount() {
-            return mThumbIds.length;
+            return values.length;
         }
 
+        @Override
         public Object getItem(int position) {
             return null;
         }
 
+        @Override
         public long getItemId(int position) {
             return 0;
         }
 
-        // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
-            if (convertView == null) {  // if it's not recycled, initialize some attributes
-                imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8, 8, 8, 8);
-            } else {
-                imageView = (ImageView) convertView;
-            }
-
-            imageView.setImageResource(mThumbIds[position]);
-            return imageView;
-        }
-
-        // references to our images
-        private Integer[] mThumbIds;
     }
 }
