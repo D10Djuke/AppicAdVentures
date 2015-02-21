@@ -133,8 +133,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             testAnimation.start();
-            AITread t = new AITread();
-            t.start();
+
+            runOnUiThread(new AITread());
         }
     }
 
