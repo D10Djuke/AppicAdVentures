@@ -343,26 +343,26 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
         protected Void doInBackground(Void... urls) {
 
-            try{
-                wait(5000);
+            boolean running = true;
 
-                if(mCreature.getStance() == Creature.Stance.IDLE){
-                    mCreature.setStance(Creature.Stance.ATTACK);
-                }else{
-                    mCreature.setStance(Creature.Stance.IDLE);
+            while(running) {
+                try {
+                    wait(5000);
+
+                    if (mCreature.getStance() == Creature.Stance.IDLE) {
+                        mCreature.setStance(Creature.Stance.ATTACK);
+                    } else {
+                        mCreature.setStance(Creature.Stance.IDLE);
+                    }
+
+                    testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
+
+                } catch (Exception e) {
+                   running = false;
                 }
-
-                mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
-
-            }catch (Exception e){
-
             }
 
             return null;
-        }
-
-        protected void onPostExecute(Void result) {
-
         }
     }
 }

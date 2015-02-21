@@ -127,13 +127,13 @@ public class Creature extends Character{
         return stance;
     }
 
-    public void changeAnimation(AnimationDrawable anim, Context c, ImageView v){
+    public AnimationDrawable changeAnimation(AnimationDrawable anim, Context c, ImageView v){
 
         int[] sequenceIDLE = {1,2,1,3};
         int[] sequenceATK = {1,2,3,4,3,2};
         String packageName = c.getPackageName();
 
-        anim.stop();
+        anim = new AnimationDrawable();
         switch (stance){
             case IDLE:
                 for(int i : sequenceIDLE){
@@ -144,14 +144,14 @@ public class Creature extends Character{
                 break;
             case ATTACK:
                 for(int i : sequenceATK){
-                    String s = "img_creature_" + name + "_idle" + i;
+                    String s = "img_creature_" + name + "_atk" + i;
                     int resId = c.getResources().getIdentifier( s, "drawable", packageName);
                     anim.addFrame(c.getResources().getDrawable(resId), 200);
                 }
                 break;
         }
         anim.setOneShot(true);
-        anim.start();
+        return anim;
     }
 
     public int getLevel(){
