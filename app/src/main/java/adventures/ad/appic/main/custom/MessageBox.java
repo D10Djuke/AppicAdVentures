@@ -350,11 +350,11 @@ public class MessageBox{
 
                             EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
 
-                            if(!editText.getText().toString().equals("")){
+
                                 invAct2.useItem();
                                 messageBox.dismiss();
                             }
-                        }
+
                     });
                 }else{
                     aBuilder.setPositiveButton("EQUIP", new DialogInterface.OnClickListener() {
@@ -364,15 +364,15 @@ public class MessageBox{
 
                             EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
 
-                            if(!editText.getText().toString().equals("")){
+
                                 invAct2.equipItem();
                                 messageBox.dismiss();
-                            }
+
                         }
                     });
                 }
 
-                aBuilder.setPositiveButton("DESTROY", new DialogInterface.OnClickListener() {
+                aBuilder.setNegativeButton("DESTROY", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
