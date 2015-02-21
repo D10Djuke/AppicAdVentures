@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -15,8 +16,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import adventures.ad.appic.game.Location;
 
@@ -79,10 +83,10 @@ public class Connection {
         int trueUser = -1;
 
         Log.d("test: " , "looooool");
-        url = serverURL + "get/Users/googleID=" + userName;
+        url = serverURL + "get/Users";
         try{
             Log.d("test2: " , "hahahahha");
-            String read = readService();
+            String read = readServiceWithParam("goodleID", userName);
             Log.d("test3: " , "tralala");
             if(read != null){
                 user = new JSONObject(read);
@@ -159,6 +163,51 @@ public class Connection {
         } catch (Exception e) {
             new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         }
+    }
+
+    public String readServiceWithParam(String param, String value) {
+        StringBuilder builder = new StringBuilder();
+        HttpClient client = new DefaultHttpClient();
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(param,value));
+
+        HttpGet httpGet = new HttpGet(url + "?" + URLEncodedUtils.format(params, "utf-8"));
+        try {
+
+            Log.d("test0: " , "test0");
+            HttpResponse response = client.execute(httpGet);
+            Log.d("test1: " , "test1");
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            Log.d("test2: " , ""+statusCode);
+
+            if (statusCode == 200) {
+                Log.d("test3: " , "test3");
+                HttpEntity entity = response.getEntity();
+                InputStream content = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                String line;
+                Log.d("test4: " , "test4");
+
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                Log.d("test5: " , "test5");
+                content.close();
+                entity.consumeContent();
+
+            } else {
+                new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+        }
+        return builder.toString();
     }
 
     public String readService() {
