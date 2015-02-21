@@ -85,24 +85,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
         mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
 
-        animationImage = (ImageView) findViewById(R.id.animationView);
-        mCreature.setAnimation(animationImage);
-        testAnimation = mCreature.getAnim();
-
-        animationImage.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    xOff = event.getX();
-                    yOff = event.getY();
-                    Log.d("x: ", xOff + "");
-                    Log.d("y: ", yOff + "");
-                    attackEnemy(v);
-                    return true;
-                }
-                return false;
-            }
-        });
         init();
 
     }
@@ -129,38 +111,60 @@ public class CameraActivity extends Activity implements SensorEventListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            testAnimation.start();
-        }
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (true) {
-                        sleep(5000);
 
-                        testAnimation.stop();
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
 
-                        if (mCreature.getStance() == Creature.Stance.IDLE) {
-                            mCreature.setStance(Creature.Stance.ATTACK);
-                        } else {
-                            mCreature.setStance(Creature.Stance.IDLE);
+                    animationImage = (ImageView) findViewById(R.id.animationView);
+                    mCreature.setAnimation(animationImage);
+                    testAnimation = mCreature.getAnim();
+
+                    animationImage.setOnTouchListener(new View.OnTouchListener() {
+
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                xOff = event.getX();
+                                yOff = event.getY();
+                                Log.d("x: ", xOff + "");
+                                Log.d("y: ", yOff + "");
+                                attackEnemy(v);
+                                return true;
+                            }
+                            return false;
                         }
-                        testAnimation = null;
-                        testAnimation = mCreature.changeAnimation(CameraActivity.this);
+                    });
 
-                        mCreature.setAnimation(animationImage);
+                    testAnimation.start();
 
-                        animationImage.setBackgroundDrawable(testAnimation);
+                    try {
+                        while (true) {
+                            sleep(5000);
 
-                        testAnimation.start();
+                            testAnimation.stop();
+
+                            if (mCreature.getStance() == Creature.Stance.IDLE) {
+                                mCreature.setStance(Creature.Stance.ATTACK);
+                            } else {
+                                mCreature.setStance(Creature.Stance.IDLE);
+                            }
+                            testAnimation = null;
+                            testAnimation = mCreature.changeAnimation(CameraActivity.this);
+
+                            mCreature.setAnimation(animationImage);
+
+                            animationImage.setBackgroundDrawable(testAnimation);
+
+                            testAnimation.start();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
-            }
-        };
+            };
 
-        thread.start();
+            thread.start();
+        }
     }
 
     @Override
