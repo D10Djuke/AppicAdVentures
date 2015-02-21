@@ -36,18 +36,8 @@
         <TextView android:id="@+id/atkStat"/>
         <TextView android:id="@+id/statDef" android:text="Defence:"/>
         <TextView android:id="@+id/defStat"/>
-        <TextView android:id="@+id/statEnd" android:text="Endurance:"/>
-        <TextView android:id="@+id/endStat"/>
-        <TextView android:id="@+id/statStr" android:text="Strength:"/>
-        <TextView android:id="@+id/strStat"/>
         <TextView android:id="@+id/statStam" android:text="Stamina:"/>
         <TextView android:id="@+id/stamStat"/>
-        <TextView android:id="@+id/statSpir" android:text="Spirit:"/>
-        <TextView android:id="@+id/spirStat"/>
-        <TextView android:id="@+id/statChar" android:text="Charisma:"/>
-        <TextView android:id="@+id/charStat"/>
-        <TextView android:id="@+id/statWisd" android:text="Wisdom:"/>
-        <TextView android:id="@+id/wisdStat"/>
 
 
         </GridLayout>

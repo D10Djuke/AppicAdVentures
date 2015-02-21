@@ -8,10 +8,8 @@ import java.util.ArrayList;
 /**
  * Created by 11305205 on 10/01/2015.
  */
-public class Player implements Character, Parcelable {
+public class Player extends Character implements Parcelable {
 
-    private String name = "Default";
-    private int level = 1;
     private int currExp = 0;
     private ArrayList<Item> inventory;
 
@@ -21,66 +19,20 @@ public class Player implements Character, Parcelable {
 
     }
 
-    public void setBasic(String name, int level, ArrayList<Item> inventory, int currExp){
-        this.name = name;
-        this.level = level;
-        this.inventory = inventory;
+    public int getCurrExp(){
+        return currExp;
+    }
+
+    public void setCurrExp(int currExp){
         this.currExp = currExp;
-
-        setBaseStats();
-        calculateStats();
-    }
-
-    private void calculateStats(){
-        stats.set(0, Integer.toString((Integer.parseInt(stats.get(4)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
-        stats.set(1, Integer.toString((Integer.parseInt(stats.get(4)) + ((level * level * (Integer.parseInt(stats.get(4))) / 256) * 3 / 2))));
-        stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
-
-    }
-
-    private void setBaseStats(){
-
-        stats.add("");
-        stats.add("");
-        stats.add("");
-        stats.add("10");
-        stats.add("10");
-        stats.add("10");
-        stats.add("5");
-        stats.add("5");
-        stats.add("5");
-    }
-
-    public String getStats(int i){
-        return stats.get(i);
-    }
-
-    public Player(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public int getLevelAsNumber(){
-        return level;
-    }
-
-    public String getLevelAsText(){
-        return "Level " + level;
-    }
-
-    public void levelUp(){
-        level++;
-    }
-
-    public void changeName(String name){
-        this.name = name;
     }
 
     public ArrayList<Item> getInventory(){
         return inventory;
+    }
+
+    public void setInventory(ArrayList<Item> inventory){
+        this.inventory = inventory;
     }
 
     public int dealDamage(Creature creature){
@@ -110,17 +62,15 @@ public class Player implements Character, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeInt(level);
+        super.writeToParcel(dest, flags);
         dest.writeList(inventory);
-        dest.writeList(stats);
+        dest.writeInt(currExp);
     }
 
-    private void readFromParcel(Parcel in) {
-        name = in.readString();
-        level = in.readInt();
+    public void readFromParcel(Parcel in) {
+        super.readFromParcel(in);
         inventory = in.readArrayList(getClass().getClassLoader());
-        stats = in.readArrayList(getClass().getClassLoader());
+        currExp = in.readInt();
     }
 
     public Player(Parcel in){

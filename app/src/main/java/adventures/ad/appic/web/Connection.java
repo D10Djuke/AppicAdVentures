@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Location;
 
 
@@ -48,7 +49,9 @@ public class Connection {
     JSONArray locations = null;
     JSONObject user = null;
     JSONObject player = null;
+
     ArrayList<Location> locationList = new ArrayList<>();
+    Player mPlayer;
 
     Context c;
 
@@ -100,23 +103,45 @@ public class Connection {
         return trueUser;
     }
 
-    public String getPlayerData(int userId){
-        url = serverURL + "get/Characters";
+    public ArrayList<Item> getInventory(int userId){
 
-        String data = "default";
+        ArrayList<Item> inventory = new ArrayList<>();
+
+        url = serverURL + "get/Inventory";
+        try{
+            //TODO write body
+
+
+
+
+
+        }catch (Exception e){
+
+        }
+
+        return inventory;
+
+    }
+
+    public Player getPlayer(int userId){
+        url = serverURL + "get/Characters";
 
         try{
             String read = readServiceWithParam("userId", Integer.toString(userId));
 
             if(read != null){
                 player = new JSONObject(read);
-                data = player.getString("name") + ";" + player.getString("level") + ";" + player.getString("exp");
+
+                mPlayer = new Player();
+                mPlayer.setCharacterName(player.getString("name"));
+                mPlayer.setLvl(player.getInt("level"));
+                mPlayer.setCurrExp(player.getInt("exp"));
             }
         }catch (Exception e){
             //new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         }
 
-        return data;
+        return mPlayer;
     }
 
     public void create(JSONObject obj, String flag){

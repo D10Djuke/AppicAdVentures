@@ -31,9 +31,7 @@ public class LoginActivity extends FragmentActivity{
     private String user;
     private ProgressDialog mProgressDialog;
     private Connection con;
-    private Player player;
     private String charName;
-    private int userId;
 
     private JSONObject playerObj;
     private JSONObject userObj;
@@ -49,8 +47,18 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void login(View view) {
-        con = new Connection(this);
-        new DownloadFilesTask().execute();
+        /*con = new Connection(this);
+        new DownloadFilesTask().execute();*/
+
+        Player dummyPlayer = new Player();
+        dummyPlayer.setCharacterName("Dummy");
+        dummyPlayer.setLvl(9000);
+        dummyPlayer.setAtk(50);
+        dummyPlayer.setDef(12);
+        dummyPlayer.setHitPoints(110);
+        dummyPlayer.setStam(10);
+        login(dummyPlayer);
+
     }
 
     public void createNewAccount(View view) {
@@ -86,12 +94,10 @@ public class LoginActivity extends FragmentActivity{
             return null;
     }
 
-    public void login(String characterData){
-        DataManager dataM = new DataManager(characterData, getApplicationContext());
-        player = dataM.getmPlayer();
+    public void login(Player character){
 
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        i.putExtra("mPlayer", player);
+        i.putExtra("mPlayer", character);
         startActivity(i);
     }
 
@@ -106,7 +112,7 @@ public class LoginActivity extends FragmentActivity{
 
     private class CreateFilesTask extends AsyncTask<Void, Void, Void> {
 
-        protected void onPreExecute(String userName) {
+        protected void onPreExecute() {
             super.onPreExecute();
             mProgressDialog = new ProgressDialog(LoginActivity.this);
             mProgressDialog.setTitle("Creating");
@@ -152,7 +158,7 @@ public class LoginActivity extends FragmentActivity{
         }
     }
 
-    private class DownloadFilesTask extends AsyncTask<Void, Void, String> {
+    private class DownloadFilesTask extends AsyncTask<Void, Void, Player> {
         boolean success = true;
         protected void onPreExecute() {
             super.onPreExecute();
@@ -163,14 +169,19 @@ public class LoginActivity extends FragmentActivity{
             mProgressDialog.show();
         }
 
-        protected String doInBackground(Void... urls) {
+        protected Player doInBackground(Void... urls) {
             int trueUser = con.confirmUser(user);
 
 
-            String result = "default";
+            Player result = null;
 
             if(trueUser >= 0) {
-                result = con.getPlayerData(trueUser);
+                result = con.getPlayer(trueUser);
+
+                /*TODO getPlayerInventory
+                    result.setInventory(con.getInventory(trueUser));
+                 */
+
             }else{
                 mProgressDialog.dismiss();
                 success = false;
@@ -179,16 +190,22 @@ public class LoginActivity extends FragmentActivity{
             return result;
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Player result) {
             if(!success)
             {
                 new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,LoginActivity.this).popMessage();
             }
-           if(mProgressDialog != null) {
-               mProgressDialog.dismiss();
-           }
 
-            login(result);
+            if(result==null)
+            {
+                new MessageBox("Error", "Result returned null", MessageBox.Type.ERROR_BOX,LoginActivity.this).popMessage();
+            }else{
+                login(result);
+            }
+
+            if(mProgressDialog != null) {
+               mProgressDialog.dismiss();
+            }
         }
     }
 }

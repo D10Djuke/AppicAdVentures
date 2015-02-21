@@ -20,7 +20,6 @@ public class MainActivity extends ActionBarActivity {
 
     //private Account myAccount = new Account(getApplicationContext());
 
-    private DataManager mDataMan;
     private Player mPlayer;
     private String events;
 
@@ -36,8 +35,8 @@ public class MainActivity extends ActionBarActivity {
         if(true) {
 
             setContentView(R.layout.activity_main);
-            ((TextView) findViewById(R.id.charName)).setText(mPlayer.getName());
-            ((TextView) findViewById(R.id.charLvl)).setText(mPlayer.getLevelAsText());
+            ((TextView) findViewById(R.id.charName)).setText(mPlayer.getCharacterName());
+            ((TextView) findViewById(R.id.charLvl)).setText(Integer.toString(mPlayer.getLvl()));
 
             ((ImageView) findViewById(R.id.ivBackpack)).setOnClickListener(new View.OnClickListener() {
                 @Override

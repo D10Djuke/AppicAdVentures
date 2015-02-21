@@ -21,19 +21,8 @@ public class DataManager implements Parcelable{
     private Player mPlayer;
     private Context c;
 
-    public DataManager(String accountData, Context c){
+    public DataManager( Context c){
         this.c = c;
-        loadAccountData(accountData);
-    }
-
-    private void loadAccountData(String accountData){
-        mPlayer = new Player();
-        String[] data = accountData.split(";");
-
-        Log.d("users", ""+data[0]);
-        ArrayList<Item> inventory = newInventory(data[0]);
-
-        mPlayer.setBasic(data[1], Integer.parseInt(data[2]), inventory, Integer.parseInt(data[3]));
     }
 
     private ArrayList<Item> newInventory(String user){

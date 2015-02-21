@@ -1,7 +1,8 @@
 
     <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
         android:oneshot="false"
-        android:clickable="true">
+        android:clickable="true"
+        >
         <item android:drawable="@drawable/monstertest_1" android:duration="200" />
         <item android:drawable="@drawable/monstertest_2" android:duration="200" />
         <item android:drawable="@drawable/monstertest_3" android:duration="200" />

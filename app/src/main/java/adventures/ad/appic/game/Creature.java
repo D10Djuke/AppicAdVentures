@@ -1,16 +1,19 @@
 package adventures.ad.appic.game;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
+
+import adventures.ad.appic.app.R;
 
 /**
  * Created by Jory on 25/01/2015.
  */
-public class Creature implements Character{
+public class Creature extends Character{
 
     protected int experience;
-    protected int location;
     protected String description;
     protected ArrayList<String> stats = new ArrayList<>(9);
     protected String name;
@@ -29,6 +32,11 @@ public class Creature implements Character{
         MASTER
     }
 
+    public enum Stance{
+        IDLE,
+        ATTACK
+    }
+
     public enum Element{
         FIRE,
         WATER,
@@ -43,7 +51,7 @@ public class Creature implements Character{
         this.element = element;
 
         setBaseStats();
-        levelWithPlayer(target.getLevelAsNumber());
+        levelWithPlayer(target.getLvl());
 
         currHealth = getStat(0);
     }
@@ -97,6 +105,15 @@ public class Creature implements Character{
         stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
     }
 
+    public ArrayList<String> getAnimationList(){
+        return null;
+    }
+
+    public void setAnimation(ImageView animationImage, AnimationDrawable testAnimation){
+        animationImage.setBackgroundResource(R.drawable.animation_test);
+        testAnimation = (AnimationDrawable) animationImage.getBackground();
+    }
+
     public int getLevel(){
         return level;
     }
@@ -115,16 +132,6 @@ public class Creature implements Character{
 
     public int dealDamage(Player player){
         int damage = 0;
-        int blockValue = (255 - Integer.parseInt(player.getStats(4)) * 2) + 1;
-        if(blockValue > 255 ){
-            blockValue = 255;
-        }else if(blockValue < 1){
-            blockValue = 1;
-        }
-
-        if(((1 * blockValue) / 256) < 100){
-
-        }
         return damage;
     }
 

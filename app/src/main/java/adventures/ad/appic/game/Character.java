@@ -1,25 +1,101 @@
 package adventures.ad.appic.game;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Jory on 25/01/2015.
  */
-public interface Character {
+public class Character implements Parcelable{
+
+    public Character(){
+
+    }
 
     String characterName = "default";
-    int baseHitPoints = 0;
-    int baseManaPoits = 0;
+    int hitPoints = 0;
 
-    int baseStrength = 10;
-    int baseIntelligence = 10;
-    int baseWillPower = 10;
-    int baseWisdom = 10;
-    int baseSpirit = 10;
-    int baseSpeed = 10;
-    int baseAgility = 10;
-    int baseEvasion = 10;
-    int baseAccuracy = 10;
-    int baseLuck = 10;
+    int atk = 0;
+    int def = 0;
+    int stam = 0;
+    int lvl = 1;
 
-    abstract void takeDamage(int damage);
+    protected void takeDamage(int damage){
+        hitPoints = hitPoints - damage;
+    }
 
+    public void setCharacterName(String name){
+        this.characterName = name;
+    }
+
+    public void setHitPoints(int hp){
+        this.hitPoints = hp;
+    }
+
+    public void setAtk(int atk){
+        this.atk = atk;
+    }
+
+    public void setDef(int def){
+        this.def = def;
+    }
+
+    public void setStam(int stam){
+        this.stam = stam;
+    }
+
+    public void setLvl(int lvl){
+        this.lvl = lvl;
+    }
+
+    public void levelUp(){
+        lvl++;
+    }
+
+    public String getCharacterName(){
+        return characterName;
+    }
+
+    public int getAtk(){
+        return atk;
+    }
+
+    public int getDef(){
+        return def;
+    }
+
+    public int getStam(){
+        return stam;
+    }
+
+    public int getLvl(){
+        return lvl;
+    }
+
+    public int getHitPoints(){
+        return hitPoints;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(stam);
+        dest.writeInt(atk);
+        dest.writeInt(def);
+        dest.writeInt(hitPoints);
+        dest.writeInt(lvl);
+        dest.writeString(characterName);
+    }
+
+    protected void readFromParcel(Parcel in) {
+        stam = in.readInt();
+        atk = in.readInt();
+        def = in.readInt();
+        hitPoints = in.readInt();
+        lvl = in.readInt();
+    }
 }

@@ -84,8 +84,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mCreature = new Creature(Creature.Dificulity.HARD, "Dolfje", mPlayer, Creature.Element.FIRE);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
-        animationImage.setBackgroundResource(R.drawable.animation_test);
-        testAnimation = (AnimationDrawable) animationImage.getBackground();
+        mCreature.setAnimation(animationImage, testAnimation);
 
 
         animationImage.setOnTouchListener(new View.OnTouchListener() {
@@ -194,8 +193,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             try {
                 camera.setPreviewDisplay(previewHolder);
             } catch (Throwable t) {
-                Log.e("PreviewDemo-surfaceCallback",
-                        "Exception in setPreviewDisplay()", t);
+                Log.e("PreviewDemo","Exception in setPreviewDisplay()", t);
             }
 
             if (!cameraConfigured) {

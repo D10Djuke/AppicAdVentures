@@ -24,18 +24,13 @@ public class AccountActivity extends ActionBarActivity {
     }
 
     private void loadStats(){
-        ((TextView) findViewById(R.id.nameStat)).setText(mPlayer.getName());
-        ((TextView) findViewById(R.id.lvlStat)).setText(mPlayer.getLevelAsText());
+        ((TextView) findViewById(R.id.nameStat)).setText(mPlayer.getCharacterName());
+        ((TextView) findViewById(R.id.lvlStat)).setText(Integer.toString(mPlayer.getLvl()));
 
-        ((TextView) findViewById(R.id.healthStat)).setText(mPlayer.getStats(0));
-        ((TextView) findViewById(R.id.atkStat)).setText(mPlayer.getStats(1));
-        ((TextView) findViewById(R.id.defStat)).setText(mPlayer.getStats(2));
-        ((TextView) findViewById(R.id.endStat)).setText(mPlayer.getStats(3));
-        ((TextView) findViewById(R.id.strStat)).setText(mPlayer.getStats(4));
-        ((TextView) findViewById(R.id.stamStat)).setText(mPlayer.getStats(5));
-        ((TextView) findViewById(R.id.spirStat)).setText(mPlayer.getStats(6));
-        ((TextView) findViewById(R.id.charStat)).setText(mPlayer.getStats(7));
-        ((TextView) findViewById(R.id.wisdStat)).setText(mPlayer.getStats(8));
+        ((TextView) findViewById(R.id.healthStat)).setText(Integer.toString(mPlayer.getHitPoints()));
+        ((TextView) findViewById(R.id.atkStat)).setText(Integer.toString(mPlayer.getAtk()));
+        ((TextView) findViewById(R.id.defStat)).setText(Integer.toString(mPlayer.getDef()));
+        ((TextView) findViewById(R.id.stamStat)).setText(Integer.toString(mPlayer.getStam()));
 
     }
 
