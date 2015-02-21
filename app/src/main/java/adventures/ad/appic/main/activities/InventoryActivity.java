@@ -70,6 +70,7 @@ public class InventoryActivity extends ActionBarActivity {
 
     public void useItem(){
         mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
+        destroyItem();
     }
 
     public void equipItem(){
@@ -78,6 +79,9 @@ public class InventoryActivity extends ActionBarActivity {
 
     public void destroyItem(){
         mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
+        gridview = (GridView) findViewById(R.id.gridview);
+        gridview.setAdapter(new ImageAdapter(this));
+        setOnclick();
     }
 
 

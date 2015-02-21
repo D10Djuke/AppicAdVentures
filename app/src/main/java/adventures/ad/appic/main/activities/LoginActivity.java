@@ -90,8 +90,7 @@ public class LoginActivity extends FragmentActivity{
         inv.add(i1);
         inv.add(i2);
         inv.add(i3);
-        p.addInventory(inv);
-
+        p.setInventory(inv);
 
     }
 
