@@ -64,8 +64,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private Location loc;
     private LatLng marker;
     private ImageView animationImage;
-    private int kwidth =0;
-    private int kheight =0;
+    private int kwidth = 0;
+    private int kheight = 0;
     private AR ar;
 
     @Override
@@ -109,7 +109,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(Sensor.TYPE_ORIENTATION == event.sensor.getType()){
+        if (Sensor.TYPE_ORIENTATION == event.sensor.getType()) {
             heading = event.values[0];
             //animationImage.setY(10);
             //animationImage.setX(100);
@@ -126,18 +126,29 @@ public class CameraActivity extends Activity implements SensorEventListener {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus){
+    public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
+        if (hasFocus) {
             testAnimation.start();
         }
         Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
-                    while(true) {
+                    while (true) {
                         sleep(5000);
-                        new AITask().execute();
+
+                        testAnimation.stop();
+
+                        if (mCreature.getStance() == Creature.Stance.IDLE) {
+                            mCreature.setStance(Creature.Stance.ATTACK);
+                        } else {
+                            mCreature.setStance(Creature.Stance.IDLE);
+                        }
+
+                        testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
+
+                        testAnimation.start();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -156,10 +167,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
         initPreview(kwidth, kheight);
 
-        for(int i = 0; i < Camera.getNumberOfCameras();i++){
+        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
-            if(info.facing == Camera.CameraInfo.CAMERA_FACING_BACK){
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 cameraId = i;
             }
         }
@@ -210,7 +221,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             try {
                 camera.setPreviewDisplay(previewHolder);
             } catch (Throwable t) {
-                Log.e("PreviewDemo","Exception in setPreviewDisplay()", t);
+                Log.e("PreviewDemo", "Exception in setPreviewDisplay()", t);
             }
 
             if (!cameraConfigured) {
@@ -225,10 +236,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 }
             }
             ar = new AR(camera, this, loc, marker);
-           // animationImage.setY(ar.convertY());
-           // animationImage.setX(ar.convertX(loc, heading));
-           // Log.e("Y", ar.convertY()+"");
-           // Log.e("X", ar.convertX(loc,heading) + "");
+            // animationImage.setY(ar.convertY());
+            // animationImage.setX(ar.convertX(loc, heading));
+            // Log.e("Y", ar.convertY()+"");
+            // Log.e("X", ar.convertX(loc,heading) + "");
         }
     }
 
@@ -257,26 +268,22 @@ public class CameraActivity extends Activity implements SensorEventListener {
             initPreview(width, height);
 
             Camera.Parameters parameters = camera.getParameters();
-            Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+            Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
-            if(display.getRotation() == Surface.ROTATION_0)
-            {
+            if (display.getRotation() == Surface.ROTATION_0) {
                 parameters.setPreviewSize(height, width);
                 camera.setDisplayOrientation(90);
             }
 
-            if(display.getRotation() == Surface.ROTATION_90)
-            {
+            if (display.getRotation() == Surface.ROTATION_90) {
                 parameters.setPreviewSize(width, height);
             }
 
-            if(display.getRotation() == Surface.ROTATION_180)
-            {
+            if (display.getRotation() == Surface.ROTATION_180) {
                 parameters.setPreviewSize(height, width);
             }
 
-            if(display.getRotation() == Surface.ROTATION_270)
-            {
+            if (display.getRotation() == Surface.ROTATION_270) {
                 parameters.setPreviewSize(width, height);
                 camera.setDisplayOrientation(180);
             }
@@ -291,7 +298,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         }
     };
 
-    private void init(){
+    private void init() {
         bar = (ProgressBar) findViewById(R.id.progressBar);
         bar.setMax(100);
         bar.setProgress(100);
@@ -299,7 +306,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     }
 
-    private void setHealth(){
+    private void setHealth() {
         double currHealth = mCreature.getHealth();
         double maxHealth = mCreature.getStat(0);
 
@@ -307,74 +314,51 @@ public class CameraActivity extends Activity implements SensorEventListener {
         bar.setProgress((int) ((currHealth / maxHealth) * 100));
     }
 
-    public void attackEnemy(View view){
+    public void attackEnemy(View view) {
 
-       if(!healthZero) {
-           int damageDone = mPlayer.dealDamage(mCreature);
-           if (damageDone > 0) {
-               mCreature.takeDamage(damageDone);
-               final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
-               Log.d("top: ", Gravity.TOP + "");
-               Log.d("mid: ", Gravity.CENTER_VERTICAL + "");
-               Log.d("bot: ", Gravity.BOTTOM + "");
-               toast.setGravity(Gravity.START | Gravity.TOP, (int)xOff, (int)yOff+(2*Gravity.BOTTOM));
-               toast.show();
+        if (!healthZero) {
+            int damageDone = mPlayer.dealDamage(mCreature);
+            if (damageDone > 0) {
+                mCreature.takeDamage(damageDone);
+                final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
+                Log.d("top: ", Gravity.TOP + "");
+                Log.d("mid: ", Gravity.CENTER_VERTICAL + "");
+                Log.d("bot: ", Gravity.BOTTOM + "");
+                toast.setGravity(Gravity.START | Gravity.TOP, (int) xOff, (int) yOff + (2 * Gravity.BOTTOM));
+                toast.show();
 
-               Handler handler = new Handler();
-               handler.postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       toast.cancel();
-                   }
-               }, 200);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 200);
 
-           }else{
-               final Toast toast = Toast.makeText(getApplicationContext(), "miss", Toast.LENGTH_SHORT);
-               toast.show();
-
-               Handler handler = new Handler();
-               handler.postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       toast.cancel();
-                   }
-               }, 200);
-           }
-           if (mCreature.getHealth() <= 0) {
-               healthZero = true;
-               win();
-           }else{
-               setHealth();
-           }
-       }
-    }
-
-    public void win(){
-            MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
-            messagebox.setPlayer(mPlayer);
-            messagebox.popMessage();
-    }
-
-    private class AITask extends AsyncTask<Void, Void, Void> {
-        protected void onPreExecute() {
-            super.onPreExecute();
-            testAnimation.stop();
-        }
-
-        protected Void doInBackground(Void... urls) {
-
-            if (mCreature.getStance() == Creature.Stance.IDLE) {
-                mCreature.setStance(Creature.Stance.ATTACK);
             } else {
-                mCreature.setStance(Creature.Stance.IDLE);
+                final Toast toast = Toast.makeText(getApplicationContext(), "miss", Toast.LENGTH_SHORT);
+                toast.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 200);
             }
-            testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
-
-            return null;
+            if (mCreature.getHealth() <= 0) {
+                healthZero = true;
+                win();
+            } else {
+                setHealth();
+            }
         }
+    }
 
-        protected void onPostExecute(Void Result){
-            testAnimation.start();
-        }
+    public void win() {
+        MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
+        messagebox.setPlayer(mPlayer);
+        messagebox.popMessage();
     }
 }
