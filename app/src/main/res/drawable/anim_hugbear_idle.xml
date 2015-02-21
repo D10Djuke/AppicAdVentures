@@ -1,0 +1,9 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false"
+    android:clickable="true"
+    >
+    <item android:drawable="@drawable/img_creature_hugbear_idle1" android:duration="200" />
+    <item android:drawable="@drawable/img_creature_hugbear_idle2" android:duration="200" />
+    <item android:drawable="@drawable/img_creature_hugbear_idle1" android:duration="200" />
+    <item android:drawable="@drawable/img_creature_hugbear_idle4" android:duration="200" />
+   </animation-list>

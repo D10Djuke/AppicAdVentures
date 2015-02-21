@@ -2,6 +2,7 @@ package adventures.ad.appic.main.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -129,6 +131,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         if(hasFocus){
             testAnimation.start();
         }
+        new AITask().execute();
     }
 
     @Override
@@ -331,5 +334,35 @@ public class CameraActivity extends Activity implements SensorEventListener {
             MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
             messagebox.setPlayer(mPlayer);
             messagebox.popMessage();
+    }
+
+    private class AITask extends AsyncTask<Void, Void, Void> {
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
+
+        protected Void doInBackground(Void... urls) {
+
+            try{
+                wait(5000);
+
+                if(mCreature.getStance() == Creature.Stance.IDLE){
+                    mCreature.setStance(Creature.Stance.ATTACK);
+                }else{
+                    mCreature.setStance(Creature.Stance.IDLE);
+                }
+
+                mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
+
+            }catch (Exception e){
+
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+
+        }
+    }
 }

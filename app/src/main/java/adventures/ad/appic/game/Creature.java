@@ -1,5 +1,6 @@
 package adventures.ad.appic.game;
 
+import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ public class Creature extends Character{
     protected Location loc;
     protected Dificulity diff;
     protected Element element;
+    protected Stance stance = Stance.IDLE;
 
     protected AnimationDrawable testAnimation = null;
 
@@ -108,18 +110,48 @@ public class Creature extends Character{
         stats.set(2, Integer.toString((Integer.parseInt(stats.get(3)) * 4 + (level * Integer.parseInt(stats.get(4)) * Integer.parseInt(stats.get(4)) / 32))));
     }
 
-    public ArrayList<String> getAnimationList(){
-        return null;
-    }
-
     public AnimationDrawable getAnim(){
         return testAnimation;
     }
 
     public void setAnimation(ImageView animationImage){
-
-        animationImage.setBackgroundResource(R.drawable.animation_test);
+        animationImage.setBackgroundResource(R.drawable.anim_hugbear_idle);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
+    }
+
+    public void setStance(Stance stance){
+        this.stance = stance;
+    }
+
+    public Stance getStance(){
+        return stance;
+    }
+
+    public void changeAnimation(AnimationDrawable anim, Context c, ImageView v){
+
+        int[] sequenceIDLE = {1,2,1,3};
+        int[] sequenceATK = {1,2,3,4,3,2};
+        String packageName = c.getPackageName();
+
+        anim.stop();
+        switch (stance){
+            case IDLE:
+                for(int i : sequenceIDLE){
+                    String s = "img_creature_" + name + "_idle" + i;
+                    int resId = c.getResources().getIdentifier( s, "drawable", packageName);
+                    anim.addFrame(c.getResources().getDrawable(resId), 200);
+                }
+                break;
+            case ATTACK:
+                for(int i : sequenceATK){
+                    String s = "img_creature_" + name + "_idle" + i;
+                    int resId = c.getResources().getIdentifier( s, "drawable", packageName);
+                    anim.addFrame(c.getResources().getDrawable(resId), 200);
+                }
+                break;
+        }
+        anim.setOneShot(true);
+        anim.start();
     }
 
     public int getLevel(){
