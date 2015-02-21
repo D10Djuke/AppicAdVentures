@@ -339,10 +339,10 @@ public class MessageBox{
                 aBuilder.setCancelable(false);
 
                 LayoutInflater inflater4 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                dialogView2 = inflater4.inflate(R.layout.dialog_voucher, null);
+                dialogView2 = inflater4.inflate(R.layout.dialog_item, null);
                 aBuilder.setView(dialogView2);
 
-                if(invAct2.getSelectedItem().getItemType() != Item.Type.POTION){
+                if(invAct2.getSelectedItem().getIconSource().equals("ico03")){
                     aBuilder.setPositiveButton("USE", new DialogInterface.OnClickListener() {
 
                         @Override
@@ -371,7 +371,6 @@ public class MessageBox{
                         }
                     });
                 }
-
 
                 aBuilder.setPositiveButton("DESTROY", new DialogInterface.OnClickListener() {
 
