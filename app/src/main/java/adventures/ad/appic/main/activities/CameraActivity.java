@@ -131,7 +131,21 @@ public class CameraActivity extends Activity implements SensorEventListener {
         if(hasFocus){
             testAnimation.start();
         }
-        new AITask().execute();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(true) {
+                        sleep(5000);
+                        new AITask().execute();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
     }
 
     @Override
@@ -344,34 +358,23 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private class AITask extends AsyncTask<Void, Void, Void> {
         protected void onPreExecute() {
             super.onPreExecute();
+            testAnimation.stop();
         }
 
         protected Void doInBackground(Void... urls) {
 
-            boolean running = true;
-
-            while(running) {
-                try {
-                    Thread.sleep(5000);
-
-                    if (mCreature.getStance() == Creature.Stance.IDLE) {
-                        mCreature.setStance(Creature.Stance.ATTACK);
-                    } else {
-                        mCreature.setStance(Creature.Stance.IDLE);
-                    }
-
-                    testAnimation.stop();
-                    testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
-                    testAnimation.start();
-
-
-                } catch (Exception e) {
-                    Log.d("test: ", e+"");
-                   running = false;
-                }
+            if (mCreature.getStance() == Creature.Stance.IDLE) {
+                mCreature.setStance(Creature.Stance.ATTACK);
+            } else {
+                mCreature.setStance(Creature.Stance.IDLE);
             }
+            testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
 
             return null;
+        }
+
+        protected void onPostExecute(Void Result){
+            testAnimation.start();
         }
     }
 }

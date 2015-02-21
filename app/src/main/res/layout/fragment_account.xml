@@ -17,7 +17,7 @@
             android:adjustViewBounds="true"
             android:background="#ff7cd528"
             android:id="@+id/charHead"
-            android:src="@drawable/test_head"/>
+            android:src="@drawable/img_char_head1"/>
 
 
         <LinearLayout

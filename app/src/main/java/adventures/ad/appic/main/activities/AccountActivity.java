@@ -19,6 +19,9 @@ public class AccountActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         Intent intent = getIntent();
+
+
+
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
         loadStats();
     }
