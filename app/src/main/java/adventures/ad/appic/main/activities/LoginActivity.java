@@ -172,7 +172,6 @@ public class LoginActivity extends FragmentActivity{
         protected Player doInBackground(Void... urls) {
             int trueUser = con.confirmUser(user);
 
-
             Player result = null;
 
             if(trueUser >= 0) {

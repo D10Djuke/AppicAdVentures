@@ -84,8 +84,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
         mCreature = new Creature(Creature.Dificulity.HARD, "Dolfje", mPlayer, Creature.Element.FIRE);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
-        mCreature.setAnimation(animationImage, testAnimation);
-
+        mCreature.setAnimation(animationImage);
+        testAnimation = mCreature.getAnim();
 
         animationImage.setOnTouchListener(new View.OnTouchListener() {
 

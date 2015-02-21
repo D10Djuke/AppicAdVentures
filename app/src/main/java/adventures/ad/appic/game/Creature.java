@@ -5,6 +5,7 @@ import android.location.Location;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import adventures.ad.appic.app.R;
 
@@ -22,6 +23,8 @@ public class Creature extends Character{
     protected Location loc;
     protected Dificulity diff;
     protected Element element;
+
+    protected AnimationDrawable testAnimation = null;
 
     protected Player target;
 
@@ -109,7 +112,12 @@ public class Creature extends Character{
         return null;
     }
 
-    public void setAnimation(ImageView animationImage, AnimationDrawable testAnimation){
+    public AnimationDrawable getAnim(){
+        return testAnimation;
+    }
+
+    public void setAnimation(ImageView animationImage){
+
         animationImage.setBackgroundResource(R.drawable.animation_test);
         testAnimation = (AnimationDrawable) animationImage.getBackground();
     }

@@ -95,7 +95,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         }
 
 
-    private class DownloadFilesTask extends AsyncTask<Void, Void, Boolean> {
+    private class DownloadFilesTask extends AsyncTask<Void, Void, Void> {
+        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressDialog = new ProgressDialog(MapActivity.this);
@@ -105,15 +106,17 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
             mProgressDialog.show();
         }
 
-        protected Boolean doInBackground(Void... urls) {
+        @Override
+        protected Void doInBackground(Void... urls) {
             con.getLocations();
-            return false;
+            return null;
         }
 
-        protected void onPostExecute(Boolean result) {
-
-            setUpMapIfNeeded();
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
             mProgressDialog.dismiss();
+            setUpMapIfNeeded();
             //MessageBox message = new MessageBox("NO SIGNAL", con.getLocationlist().get(0).getName(), MessageBox.Type.TEST_BOX, MapActivity.this);
             //MessageBox message = new MessageBox("test", loc.toString() + " ",  MessageBox.Type.MESSAGE_BOX, MapActivity.this);
            // message.popMessage();
