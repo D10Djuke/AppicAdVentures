@@ -132,7 +132,7 @@ public class LoginActivity extends FragmentActivity{
                 playerObj.put("userId", trueUser);
 
             } catch (JSONException e) {
-                new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, LoginActivity.this).popMessage();
+                //new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, LoginActivity.this).popMessage();
             }
 
             if(trueUser != -1){
@@ -144,12 +144,11 @@ public class LoginActivity extends FragmentActivity{
             return null;
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Void result) {
             if(mProgressDialog != null) {
                 mProgressDialog.dismiss();
             }
 
-            login(result);
         }
     }
 

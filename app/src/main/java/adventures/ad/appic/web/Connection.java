@@ -101,19 +101,19 @@ public class Connection {
     }
 
     public String getPlayerData(int userId){
-        url = serverURL + "get/Characters/userId/" + userId;
+        url = serverURL + "get/Characters";
 
         String data = "default";
 
         try{
-            String read = readService();
+            String read = readServiceWithParam("userId", Integer.toString(userId));
 
             if(read != null){
                 player = new JSONObject(read);
                 data = player.getString("name") + ";" + player.getString("level") + ";" + player.getString("exp");
             }
         }catch (Exception e){
-            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+            //new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         }
 
         return data;
