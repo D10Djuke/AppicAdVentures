@@ -63,13 +63,13 @@ public class Player extends Character implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeList(inventory);
+        //dest.writeList(inventory);
         dest.writeInt(currExp);
     }
 
     public void readFromParcel(Parcel in) {
         super.readFromParcel(in);
-        inventory = in.readArrayList(getClass().getClassLoader());
+        //inventory = in.readArrayList(getClass().getClassLoader());
         currExp = in.readInt();
     }
 

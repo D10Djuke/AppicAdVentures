@@ -97,5 +97,6 @@ public class Character implements Parcelable{
         def = in.readInt();
         hitPoints = in.readInt();
         lvl = in.readInt();
+        characterName = in.readString();
     }
 }
