@@ -94,7 +94,7 @@ public class AR {
         return result;
     }
 
-    private float getAngle(Location loc, float bearing){
+    public float getAngle(Location loc, float bearing){
 
         float bearingTo;
         float angle;
@@ -109,6 +109,8 @@ public class AR {
         if (bearing < 0 ) {
             bearing = 360 + bearing;
         }
+      //  Log.d("Heading: " , ""+bearing);
+      //  Log.d("BearingTo: ", "" + bearingTo);
         return angle = bearing - bearingTo; //returns direction u are facing compared to the object
     }
 

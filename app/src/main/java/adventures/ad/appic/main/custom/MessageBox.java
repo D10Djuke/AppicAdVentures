@@ -55,7 +55,8 @@ public class MessageBox{
         VICTORY_BOX,
         ACCOUNTPICK_BOX,
         NEWACCOUNT_BOX,
-        STANDARD_ERROR_BOX
+        STANDARD_ERROR_BOX,
+        FLEE_BOX
     }
 
 
@@ -155,6 +156,33 @@ public class MessageBox{
                 messageBox = aBuilder.create();
 
             break;
+            case "FLEE_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                aBuilder.setMessage(s);
+                aBuilder.setTitle(title);
+                aBuilder.setCancelable(false);
+
+                aBuilder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        messageBox.dismiss();
+                    }
+                });
+
+                aBuilder.setNegativeButton("YES", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        messageBox.dismiss();
+                        ((Activity) context).finish();
+                    }
+                });
+
+
+                messageBox = aBuilder.create();
+
+                break;
             case "VICTORY_BOX":
                 aBuilder = new AlertDialog.Builder(context);
                 aBuilder.setMessage(s);

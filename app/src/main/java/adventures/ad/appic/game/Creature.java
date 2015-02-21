@@ -3,6 +3,7 @@ package adventures.ad.appic.game;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class Creature extends Character{
 
     public AnimationDrawable changeAnimation(AnimationDrawable anim, Context c, ImageView v){
 
-        int[] sequenceIDLE = {1,2,1,3};
+        int[] sequenceIDLE = {1,2,1,4};
         int[] sequenceATK = {1,2,3,4,3,2};
         String packageName = c.getPackageName();
 
@@ -138,6 +139,7 @@ public class Creature extends Character{
             case IDLE:
                 for(int i : sequenceIDLE){
                     String s = "img_creature_" + name + "_idle" + i;
+                    Log.e("stance" , s);
                     int resId = c.getResources().getIdentifier( s, "drawable", packageName);
                     anim.addFrame(c.getResources().getDrawable(resId), 200);
                 }
@@ -145,6 +147,7 @@ public class Creature extends Character{
             case ATTACK:
                 for(int i : sequenceATK){
                     String s = "img_creature_" + name + "_atk" + i;
+                    Log.e("stance" , s);
                     int resId = c.getResources().getIdentifier( s, "drawable", packageName);
                     anim.addFrame(c.getResources().getDrawable(resId), 200);
                 }

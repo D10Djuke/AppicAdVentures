@@ -55,7 +55,6 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private Sensor gs;
     private Sensor orientationSensor;
     private float heading = 0f;
-    private ProgressDialog mProgressDialog;
 
     /* List circle;
      private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
@@ -96,16 +95,17 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
 
     private class DownloadFilesTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog mProgressDialog;
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             mProgressDialog = new ProgressDialog(MapActivity.this);
             mProgressDialog.setTitle("Getting Locations");
             mProgressDialog.setMessage("Loading..");
-            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setIndeterminate(true);
             mProgressDialog.show();
         }
-
         @Override
         protected Void doInBackground(Void... urls) {
             con.getLocations();
@@ -113,13 +113,19 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        }
+        @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            mProgressDialog.dismiss();
+            Log.d("post: " , "post");
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
             setUpMapIfNeeded();
-            //MessageBox message = new MessageBox("NO SIGNAL", con.getLocationlist().get(0).getName(), MessageBox.Type.TEST_BOX, MapActivity.this);
-            //MessageBox message = new MessageBox("test", loc.toString() + " ",  MessageBox.Type.MESSAGE_BOX, MapActivity.this);
-           // message.popMessage();
         }
     }
 
@@ -173,8 +179,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         FirstLocation = true;
         sMan.registerListener(this, gs, SensorManager.SENSOR_DELAY_FASTEST);
         sMan.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        new DownloadFilesTask().execute();
-       // setUpMapIfNeeded();
+        //new DownloadFilesTask().execute();
+        setUpMapIfNeeded();
     }
 
     /**
@@ -218,8 +224,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
                             // Getting view from the layout file info_window_layout
                             View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
-                            ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
-                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());
+                         /*   ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
+                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());*/
                             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
                             if (display.getRotation() == Surface.ROTATION_0) {

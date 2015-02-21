@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -166,27 +167,33 @@ public class Connection {
 
             if(read != null)
             {
+                if(read != "no connection") {
 
-                locations = new JSONArray(read);
-                for (int i = 0; i < locations.length(); i++) {
-                    JSONObject c = locations.getJSONObject(i);
+                    locations = new JSONArray(read);
+                    for (int i = 0; i < locations.length(); i++) {
+                        JSONObject c = locations.getJSONObject(i);
 
-                    Location loc = new Location();
+                        Location loc = new Location();
 
-                    loc.setId(c.getInt("locationId"));
-                    loc.setName(c.getString("name"));
-                    loc.setCoordx(c.getString("coordx"));
-                    loc.setCoordy(c.getString("coordy"));
-                    loc.setAddress(c.getString("address"));
-                    loc.setPhoto(c.getString("photo"));
-                    loc.setEventId(c.getInt("eventId"));
+                        loc.setId(c.getInt("locationId"));
+                        loc.setName(c.getString("name"));
+                        loc.setCoordx(c.getString("coordx"));
+                        loc.setCoordy(c.getString("coordy"));
+                        loc.setAddress(c.getString("address"));
+                        loc.setPhoto(c.getString("photo"));
+                        loc.setEventId(c.getInt("eventId"));
 
-                    locationList.add(loc);
+                        locationList.add(loc);
+                    }
+                }
+                else{
 
+                    Log.d("testend: " , "testend");
                 }
             }
         } catch (Exception e) {
-            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+
+//            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         }
     }
 
@@ -266,7 +273,10 @@ public class Connection {
             } else {
                 new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
             }
-        } catch (ClientProtocolException e) {
+        } catch (HttpHostConnectException e){
+            return "no connection";
+        }
+        catch (ClientProtocolException e) {
             e.printStackTrace();
             new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         } catch (IOException e) {

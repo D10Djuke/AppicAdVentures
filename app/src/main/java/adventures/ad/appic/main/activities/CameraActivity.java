@@ -83,7 +83,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
         sMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-        mCreature = new Creature(Creature.Dificulity.HARD, "Dolfje", mPlayer, Creature.Element.FIRE);
+        mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
         mCreature.setAnimation(animationImage);
@@ -111,10 +111,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if(Sensor.TYPE_ORIENTATION == event.sensor.getType()){
             heading = event.values[0];
-          //  animationImage.setY(ar.convertY());
-          //  animationImage.setX(ar.convertX(loc, heading));
-            animationImage.setScaleX(ar.scaling());
-            animationImage.setScaleY(ar.scaling());
+            //animationImage.setY(10);
+            //animationImage.setX(100);
+            //animationImage.setScaleX(ar.scaling());
+            //animationImage.setScaleY(ar.scaling());
             //Log.e("Y", ar.convertY()+"");
             //Log.e("X", ar.convertX(loc,heading) + "");
         }
@@ -216,6 +216,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
            // Log.e("Y", ar.convertY()+"");
            // Log.e("X", ar.convertX(loc,heading) + "");
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new MessageBox("You Coward", "Do you really want to flee?", MessageBox.Type.FLEE_BOX, this).popMessage();
     }
 
     private void startPreview() {
@@ -347,7 +352,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
             while(running) {
                 try {
-                    wait(5000);
+                    Thread.sleep(5000);
 
                     if (mCreature.getStance() == Creature.Stance.IDLE) {
                         mCreature.setStance(Creature.Stance.ATTACK);
@@ -355,9 +360,13 @@ public class CameraActivity extends Activity implements SensorEventListener {
                         mCreature.setStance(Creature.Stance.IDLE);
                     }
 
+                    testAnimation.stop();
                     testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
+                    testAnimation.start();
+
 
                 } catch (Exception e) {
+                    Log.d("test: ", e+"");
                    running = false;
                 }
             }

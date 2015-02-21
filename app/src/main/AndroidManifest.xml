@@ -131,7 +131,9 @@ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
         </activity>
         <activity
             android:name="adventures.ad.appic.main.activities.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
