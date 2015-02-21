@@ -16,11 +16,13 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
 import adventures.ad.appic.manager.DataManager;
@@ -57,7 +59,39 @@ public class LoginActivity extends FragmentActivity{
         dummyPlayer.setDef(12);
         dummyPlayer.setHitPoints(110);
         dummyPlayer.setStam(10);
+
+        createInventory(dummyPlayer);
+
         login(dummyPlayer);
+
+    }
+
+
+
+    private void createInventory(Player p){
+        //TODO delete method
+
+        Item i1 = new Item();
+        i1.setItemName("Zwaard");
+        i1.setItemDescription("een zwaard");
+        i1.setType("00");
+
+        Item i2 = new Item();
+        i1.setItemName("Voucher");
+        i1.setItemDescription("een voucher");
+        i1.setType("04");
+
+        Item i3 = new Item();
+        i1.setItemName("Potion");
+        i1.setItemDescription("een potion");
+        i1.setType("03");
+
+        ArrayList<Item> inv = new ArrayList<>();
+        inv.add(i1);
+        inv.add(i2);
+        inv.add(i3);
+        p.addInventory(inv);
+
 
     }
 
@@ -176,6 +210,7 @@ public class LoginActivity extends FragmentActivity{
 
             if(trueUser >= 0) {
                 result = con.getPlayer(trueUser);
+
 
                 /*TODO getPlayerInventory
                     result.setInventory(con.getInventory(trueUser));

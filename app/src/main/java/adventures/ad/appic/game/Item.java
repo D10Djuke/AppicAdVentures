@@ -21,6 +21,7 @@ public class Item implements Parcelable{
     private String itemName;
     private String itemDescription;
     private String itemType;
+    private Type type;
 
     private Context c;
 
@@ -31,6 +32,20 @@ public class Item implements Parcelable{
         this.itemID = itemID;
         loadItemData();
         setIconSource();
+    }
+
+    public Item(){
+
+    }
+
+    public enum Type{
+        WEAPON,
+        HEAD,
+        BODY,
+        VOUCHER,
+        LEGS,
+        FEET,
+        POTION
     }
 
     private void loadItemData(){
@@ -75,12 +90,50 @@ public class Item implements Parcelable{
         return itemName;
     }
 
+    public void setItemName(String itemName){
+        this.itemName = itemName;
+    }
+
     public String getItemDescription(){
         return itemDescription;
     }
 
+    public void setItemDescription(String itemDescription){
+        this.itemDescription = itemDescription;
+    }
+
     public String getIconSource(){
         return iconSource;
+    }
+
+    public Type getItemType(){
+        return type;
+    }
+
+    public void setType(String itemType){
+        switch (itemType){
+            case "00":
+                type = Type.WEAPON;
+                break;
+            case "01":
+                type = Type.HEAD;
+                break;
+            case "02":
+                type = Type.BODY;
+                break;
+            case "03":
+                type = Type.POTION;
+                break;
+            case "04":
+                type = Type.VOUCHER;
+                break;
+            case "05":
+                type = Type.LEGS;
+                break;
+            case "06":
+                type = Type.FEET;
+                break;
+        }
     }
 
     @Override

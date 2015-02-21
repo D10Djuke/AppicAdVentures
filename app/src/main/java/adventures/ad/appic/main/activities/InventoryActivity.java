@@ -21,11 +21,17 @@ import java.util.ArrayList;
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.custom.MessageBox;
 import adventures.ad.appic.web.Connection;
 
 public class InventoryActivity extends ActionBarActivity {
 
     private Player mPlayer;
+
+    private GridView gridview;
+
+    private Item selectedItem;
+    private int selectedIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +42,42 @@ public class InventoryActivity extends ActionBarActivity {
         //mDataMan = (DataManager) intent.getParcelableExtra("mDataMan");
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
+        gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ImageAdapter(this));
+        setOnclick();
 
+    }
+
+    private void setOnclick(){
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(InventoryActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+
+                selectedItem = mPlayer.getInventory().get(position);
+                selectedIndex = position;
+
+                if(mPlayer.getInventory().get(position).getItemType() != Item.Type.VOUCHER){
+                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "What do you want to do?", MessageBox.Type.ITEM_BOX, InventoryActivity.this);
+                }else{
+                    new MessageBox(mPlayer.getInventory().get(position).getItemName(), "Please enter a valid code", MessageBox.Type.VOUCHER_BOX, InventoryActivity.this);
+                }
             }
         });
+    }
+
+    public Item getSelectedItem(){
+        return selectedItem;
+    }
+
+    public void useItem(){
+        mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
+    }
+
+    public void equipItem(){
+
+    }
+
+    public void destroyItem(){
+        mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
     }
 
 
@@ -75,6 +109,17 @@ public class InventoryActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void validateCode(String code){
+        boolean succes = true;
+
+        //TODO boolean succes = new Connection().validateVoucher(code);
+
+        if(!succes){
+
+        }
+
+    }
+
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
 
@@ -85,11 +130,13 @@ public class InventoryActivity extends ActionBarActivity {
             for(Item i: mPlayer.getInventory()){
                 String packageName = c.getPackageName();
                 int resId = c.getResources().getIdentifier(i.getIconSource(), "drawable", packageName);
-
                 tempArr.add(resId);
             }
             mThumbIds = new Integer[tempArr.size()];
             mThumbIds = tempArr.toArray(mThumbIds);
+
+
+
         }
 
         public int getCount() {

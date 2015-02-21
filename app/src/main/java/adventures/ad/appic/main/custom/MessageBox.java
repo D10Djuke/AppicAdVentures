@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.activities.InventoryActivity;
 import adventures.ad.appic.main.activities.LoginActivity;
@@ -57,7 +58,9 @@ public class MessageBox{
         NEWACCOUNT_BOX,
         STANDARD_ERROR_BOX,
         FLEE_BOX,
-        DEFEAT_BOX
+        VOUCHER_BOX,
+        CHARIMG_BOX,
+        ITEM_BOX
     }
 
 
@@ -205,24 +208,6 @@ public class MessageBox{
                 messageBox = aBuilder.create();
 
             break;
-            case "DEFEAT_BOX":
-                aBuilder = new AlertDialog.Builder(context);
-                aBuilder.setMessage(s);
-                aBuilder.setTitle(title);
-                aBuilder.setCancelable(false);
-
-                aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        messageBox.dismiss();
-                        ((Activity) context).finish();
-                    }
-                });
-
-                messageBox = aBuilder.create();
-
-                break;
             case "ACCOUNTPICK_BOX":
 
                 aBuilder = new AlertDialog.Builder(context);
@@ -290,6 +275,96 @@ public class MessageBox{
                 });
 
                 messageBox = aBuilder.create();
+                break;
+            case "VOUCHER_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                final InventoryActivity invAct = (InventoryActivity) context;
+
+                aBuilder.setMessage(s);
+                aBuilder.setTitle(title);
+                aBuilder.setCancelable(false);
+
+                LayoutInflater inflater3 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                dialogView2 = inflater3.inflate(R.layout.dialog_voucher, null);
+                aBuilder.setView(dialogView2);
+
+                aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
+
+                        if(!editText.getText().toString().equals("")){
+                            invAct.validateCode(editText.getText().toString());
+                            messageBox.dismiss();
+                        }
+                    }
+                });
+                aBuilder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        messageBox.dismiss();
+                    }
+                });
+
+                messageBox = aBuilder.create();
+                break;
+            case "ITEM_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                final InventoryActivity invAct2 = (InventoryActivity) context;
+
+                aBuilder.setMessage(s);
+                aBuilder.setTitle(title);
+                aBuilder.setCancelable(false);
+
+                LayoutInflater inflater4 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                dialogView2 = inflater4.inflate(R.layout.dialog_voucher, null);
+                aBuilder.setView(dialogView2);
+
+                if(invAct2.getSelectedItem().getItemType() != Item.Type.POTION){
+                    aBuilder.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
+
+                            if(!editText.getText().toString().equals("")){
+                                invAct2.useItem();
+                                messageBox.dismiss();
+                            }
+                        }
+                    });
+                }else{
+                    aBuilder.setPositiveButton("EQUIP", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
+
+                            if(!editText.getText().toString().equals("")){
+                                invAct2.equipItem();
+                                messageBox.dismiss();
+                            }
+                        }
+                    });
+                }
+
+
+                aBuilder.setPositiveButton("DESTROY", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        invAct2.destroyItem();
+                        messageBox.dismiss();
+                    }
+                });
+
+                messageBox = aBuilder.create();
+                break;
         }
     }
 
