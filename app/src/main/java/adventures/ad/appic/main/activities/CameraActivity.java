@@ -145,8 +145,12 @@ public class CameraActivity extends Activity implements SensorEventListener {
                         } else {
                             mCreature.setStance(Creature.Stance.IDLE);
                         }
+                        testAnimation = null;
+                        testAnimation = mCreature.changeAnimation(CameraActivity.this);
 
-                        testAnimation = mCreature.changeAnimation(testAnimation, CameraActivity.this, animationImage);
+                        mCreature.setAnimation(animationImage);
+
+                        animationImage.setBackgroundDrawable(testAnimation);
 
                         testAnimation.start();
                     }

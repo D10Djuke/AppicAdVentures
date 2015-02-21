@@ -128,13 +128,14 @@ public class Creature extends Character{
         return stance;
     }
 
-    public AnimationDrawable changeAnimation(AnimationDrawable anim, Context c, ImageView v){
+    public AnimationDrawable changeAnimation(Context c){
 
         int[] sequenceIDLE = {1,2,1,4};
         int[] sequenceATK = {1,2,3,4,3,2};
         String packageName = c.getPackageName();
 
-        anim = new AnimationDrawable();
+
+        AnimationDrawable anim = new AnimationDrawable();
         switch (stance){
             case IDLE:
                 for(int i : sequenceIDLE){
