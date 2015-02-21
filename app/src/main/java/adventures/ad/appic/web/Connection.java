@@ -78,15 +78,19 @@ public class Connection {
 
         int trueUser = -1;
 
-        url = serverURL + "get/Users/name/" + userName;
+        Log.d("test: " , "looooool");
+        url = serverURL + "get/Users/googleID=" + userName;
         try{
+            Log.d("test2: " , "hahahahha");
             String read = readService();
+            Log.d("test3: " , "tralala");
             if(read != null){
                 user = new JSONObject(read);
                 trueUser = user.getInt("userId");
             }
+            Log.d("test4: " , "pfffffffffffffffff");
         }catch (Exception e) {
-            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+  //          new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
         }
 
         return trueUser;
@@ -99,6 +103,7 @@ public class Connection {
 
         try{
             String read = readService();
+
             if(read != null){
                 player = new JSONObject(read);
                 data = player.getString("name") + ";" + player.getString("level") + ";" + player.getString("exp");
@@ -162,19 +167,25 @@ public class Connection {
         HttpGet httpGet = new HttpGet(url);
         try {
 
+            Log.d("test0: " , "test0");
             HttpResponse response = client.execute(httpGet);
+            Log.d("test1: " , "test1");
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
+            Log.d("test2: " , ""+statusCode);
 
             if (statusCode == 200) {
+                Log.d("test3: " , "test3");
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(content));
                 String line;
+                Log.d("test4: " , "test4");
 
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
+                Log.d("test5: " , "test5");
                 content.close();
                 entity.consumeContent();
 

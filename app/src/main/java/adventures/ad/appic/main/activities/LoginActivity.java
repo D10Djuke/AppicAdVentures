@@ -120,7 +120,7 @@ public class LoginActivity extends FragmentActivity{
 
             String createFlag = "USER";
 
-            int trueUser = new Connection(getApplicationContext()).confirmUser(charName);
+            int trueUser = con.confirmUser(charName);
 
             userObj = new JSONObject();
             playerObj = new JSONObject();
@@ -136,10 +136,10 @@ public class LoginActivity extends FragmentActivity{
             }
 
             if(trueUser != -1){
-                new Connection(getApplicationContext()).create(userObj, createFlag);
+                con.create(userObj, createFlag);
 
                 createFlag = "CHARACTER";
-                new Connection(getApplicationContext()).create(playerObj, createFlag);
+                con.create(playerObj, createFlag);
             }
             return null;
         }
@@ -154,6 +154,7 @@ public class LoginActivity extends FragmentActivity{
     }
 
     private class DownloadFilesTask extends AsyncTask<Void, Void, String> {
+        boolean success = true;
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressDialog = new ProgressDialog(LoginActivity.this);
@@ -164,20 +165,26 @@ public class LoginActivity extends FragmentActivity{
         }
 
         protected String doInBackground(Void... urls) {
-            int trueUser = new Connection(getApplicationContext()).confirmUser(user);
+            int trueUser = con.confirmUser(user);
+
 
             String result = "default";
 
             if(trueUser >= 0) {
-                result = new Connection(getApplicationContext()).getPlayerData(trueUser);
+                result = con.getPlayerData(trueUser);
             }else{
                 mProgressDialog.dismiss();
-                new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,LoginActivity.this).popMessage();
+                success = false;
+
             }
             return result;
         }
 
         protected void onPostExecute(String result) {
+            if(!success)
+            {
+                new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,LoginActivity.this).popMessage();
+            }
            if(mProgressDialog != null) {
                mProgressDialog.dismiss();
            }

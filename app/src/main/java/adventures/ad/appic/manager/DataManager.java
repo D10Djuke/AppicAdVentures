@@ -30,6 +30,7 @@ public class DataManager implements Parcelable{
         mPlayer = new Player();
         String[] data = accountData.split(";");
 
+        Log.d("users", ""+data[0]);
         ArrayList<Item> inventory = newInventory(data[0]);
 
         mPlayer.setBasic(data[1], Integer.parseInt(data[2]), inventory, Integer.parseInt(data[3]));
