@@ -82,7 +82,7 @@ public class Item implements Parcelable{
         return sb.toString();
     }
 
-    private void setIconSource(){
+    public void setIconSource(){
        iconSource = "ico" + itemType;
     }
 

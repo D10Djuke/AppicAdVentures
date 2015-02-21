@@ -75,16 +75,19 @@ public class LoginActivity extends FragmentActivity{
         i1.setItemName("Zwaard");
         i1.setItemDescription("een zwaard");
         i1.setType("00");
+        i1.setIconSource();
 
         Item i2 = new Item();
-        i1.setItemName("Voucher");
-        i1.setItemDescription("een voucher");
-        i1.setType("04");
+        i2.setItemName("Voucher");
+        i2.setItemDescription("een voucher");
+        i2.setType("04");
+        i2.setIconSource();
 
         Item i3 = new Item();
-        i1.setItemName("Potion");
-        i1.setItemDescription("een potion");
-        i1.setType("03");
+        i3.setItemName("Potion");
+        i3.setItemDescription("een potion");
+        i3.setType("03");
+        i3.setIconSource();
 
         ArrayList<Item> inv = new ArrayList<>();
         inv.add(i1);
