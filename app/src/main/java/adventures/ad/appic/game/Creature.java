@@ -115,7 +115,7 @@ public class Creature extends Character{
         return testAnimation;
     }
 
-    public int setIdleAnimation(ImageView img, Context c){
+    public int setIdleAnimation(Context c){
 
         String packageName = c.getPackageName();
 
@@ -126,14 +126,13 @@ public class Creature extends Character{
         return resId;
     }
 
-    public int setAttackAnimation(ImageView img, Context c){
+    public int setAttackAnimation(Context c){
 
         String packageName = c.getPackageName();
 
         String s = "img_creature_" + name + "_atk";
         Log.e("stance" , s);
         int resId = c.getResources().getIdentifier( s, "drawable", packageName);
-
 
         return resId;
 
