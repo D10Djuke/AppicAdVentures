@@ -103,6 +103,7 @@ public class Connection {
                     Log.e("idApp", userName);
                         if (c.getString("googleID").equals(userName)) {
                         trueUser = c.getInt("userId");
+                            Log.e("name", ""+trueUser);
                         break;
                     }
                     else {
