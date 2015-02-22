@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import adventures.ad.appic.app.R;
-import adventures.ad.appic.manager.DataManager;
 
 /**
  * Created by Jory on 25/01/2015.
@@ -21,21 +20,16 @@ public class Item implements Parcelable{
     private String itemName;
     private String itemDescription;
     private String itemType;
-    private Type type;
+    private String type;
 
     private Context c;
 
-    public Item(String itemID, DataManager data){
-
-        c = data.getContext();
-
-        this.itemID = itemID;
-        loadItemData();
-        setIconSource();
-    }
-
     public Item(){
 
+    }
+
+    public Item(String iconSource){
+        this.iconSource = iconSource;
     }
 
     public enum Type{
@@ -45,41 +39,8 @@ public class Item implements Parcelable{
         VOUCHER,
         LEGS,
         FEET,
-        POTION
-    }
-
-    private void loadItemData(){
-
-        String items = ReadFromfile();
-
-        String[] itemDataString = items.split("à");
-
-        for(String s : itemDataString){
-
-            String itemData[] = s.split("é");
-                if(itemData[0].equals(itemID)){
-                    itemType = itemData[1];
-                    itemName = itemData[2];
-                    itemDescription = itemData[3];
-                }
-        }
-    }
-
-    public String ReadFromfile() {
-
-        StringBuilder sb = new StringBuilder();
-
-        for(int i = 1; i<=5; i++){
-
-            String itemName = "ITEM00" + i;
-
-            String packageName = c.getPackageName();
-            int resId = c.getResources().getIdentifier(itemName, "string", packageName);
-
-            sb.append(c.getResources().getString(resId));
-        }
-
-        return sb.toString();
+        POTION,
+        BLANK
     }
 
     public void setIconSource(){
@@ -106,7 +67,7 @@ public class Item implements Parcelable{
         return iconSource;
     }
 
-    public Type getItemType(){
+    public String getItemType(){
         return type;
     }
 
@@ -114,25 +75,28 @@ public class Item implements Parcelable{
         this.itemType = itemType;
         switch (itemType){
             case "00":
-                type = Type.WEAPON;
+                type = Type.WEAPON.toString();
                 break;
             case "01":
-                type = Type.HEAD;
+                type = Type.HEAD.toString();
                 break;
             case "02":
-                type = Type.BODY;
+                type = Type.BODY.toString();
                 break;
             case "03":
-                type = Type.POTION;
+                type = Type.POTION.toString();
                 break;
             case "04":
-                type = Type.VOUCHER;
+                type = Type.VOUCHER.toString();
                 break;
             case "05":
-                type = Type.LEGS;
+                type = Type.LEGS.toString();
                 break;
             case "06":
-                type = Type.FEET;
+                type = Type.FEET.toString();
+                break;
+            case "blank":
+                type= Type.BLANK.toString();
                 break;
         }
     }
@@ -149,6 +113,7 @@ public class Item implements Parcelable{
         dest.writeString(iconSource);
         dest.writeString(itemDescription);
         dest.writeString(itemType);
+        dest.writeString(type);
     }
 
     private void readFromParcel(Parcel in) {
@@ -157,6 +122,7 @@ public class Item implements Parcelable{
         iconSource = in.readString();
         itemDescription = in.readString();
         itemType = in.readString();
+        type = in.readString();
     }
 
     public Item(Parcel in){

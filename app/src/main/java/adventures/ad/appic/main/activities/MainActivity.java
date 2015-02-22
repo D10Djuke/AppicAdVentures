@@ -14,7 +14,6 @@ import android.widget.TextView;
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
-import adventures.ad.appic.manager.DataManager;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -43,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), InventoryActivity.class);
                     i.putExtra("mPlayer", mPlayer);
-                    startActivity(i);
+                    startActivityForResult(i,1);
                 }
             });
 
@@ -85,6 +84,7 @@ public class MainActivity extends ActionBarActivity {
             if(resultCode == RESULT_OK){
                 events = data.getStringExtra("mEvents");
                 ((TextView) findViewById(R.id.tvEvents)).setText(events);
+                mPlayer = (Player) data.getParcelableExtra("mPlayer");
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result

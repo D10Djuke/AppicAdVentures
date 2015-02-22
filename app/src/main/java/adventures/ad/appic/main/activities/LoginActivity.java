@@ -25,7 +25,6 @@ import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.MessageBox;
-import adventures.ad.appic.manager.DataManager;
 import adventures.ad.appic.web.Connection;
 
 public class LoginActivity extends FragmentActivity{

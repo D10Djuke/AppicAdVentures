@@ -1,18 +1,37 @@
 package adventures.ad.appic.main.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import adventures.ad.appic.app.R;
+import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.custom.ImageAdapter;
+import adventures.ad.appic.main.custom.MessageBox;
 
 public class AccountActivity extends ActionBarActivity {
 
     private Player mPlayer;
+    private GridView gridview;
+
+    private ArrayList<Item> armorList;
+
+    private Item selectedItem;
+    private int selectedIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +39,47 @@ public class AccountActivity extends ActionBarActivity {
         setContentView(R.layout.activity_account);
         Intent intent = getIntent();
 
-
+        ImageView imgView = (ImageView) findViewById(R.id.characterImg);
+        imgView.setBackgroundResource(R.drawable.img_char_head1);
 
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
+
+        gridview = (GridView) findViewById(R.id.armorView);
+
+        armorList = mPlayer.getEquippedItems();
+
+        gridview.setAdapter(new ImageAdapter(this, armorList, true));
+        setOnclick();
+
         loadStats();
+    }
+
+    private void setOnclick() {
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+                selectedIndex = position;
+                selectedItem = armorList.get(position);
+
+                new MessageBox("","", MessageBox.Type.EQUIPPED_BOX, AccountActivity.this).popMessage();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra("mPlayer", mPlayer);
+        setResult(Activity.RESULT_OK, data);
+        super.onBackPressed();
+    }
+
+    public Item getSelectedItem(){
+        return selectedItem;
+    }
+
+    public Player getPlayer(){
+        return mPlayer;
     }
 
     private void loadStats(){
@@ -60,4 +116,6 @@ public class AccountActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

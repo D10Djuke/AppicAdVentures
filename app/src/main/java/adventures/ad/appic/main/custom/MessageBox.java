@@ -25,6 +25,7 @@ import java.util.List;
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.activities.AccountActivity;
 import adventures.ad.appic.main.activities.InventoryActivity;
 import adventures.ad.appic.main.activities.LoginActivity;
 import adventures.ad.appic.main.activities.SettingsActivity;
@@ -61,7 +62,8 @@ public class MessageBox{
         VOUCHER_BOX,
         CHARIMG_BOX,
         ITEM_BOX,
-        DEFEAT_BOX
+        DEFEAT_BOX,
+        EQUIPPED_BOX
     }
 
 
@@ -320,7 +322,7 @@ public class MessageBox{
                         }
                     }
                 });
-                aBuilder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                aBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -336,7 +338,7 @@ public class MessageBox{
 
                 aBuilder.setMessage(s);
                 aBuilder.setTitle(title);
-                aBuilder.setCancelable(false);
+                aBuilder.setCancelable(true);
 
                 LayoutInflater inflater4 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 dialogView2 = inflater4.inflate(R.layout.dialog_item, null);
@@ -348,12 +350,8 @@ public class MessageBox{
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
 
-                            EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
-
-                            if(!editText.getText().toString().equals("")){
                                 invAct2.useItem();
                                 messageBox.dismiss();
-                            }
                         }
                     });
                 }else{
@@ -362,17 +360,13 @@ public class MessageBox{
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
 
-                            EditText editText = (EditText) dialogView2.findViewById(R.id.voucher_code_field);
-
-                            if(!editText.getText().toString().equals("")){
-                                invAct2.equipItem();
+                                invAct2.equipItem(invAct2.getSelectedItem());
                                 messageBox.dismiss();
-                            }
                         }
                     });
                 }
 
-                aBuilder.setPositiveButton("DESTROY", new DialogInterface.OnClickListener() {
+                aBuilder.setNegativeButton("DESTROY", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -381,8 +375,48 @@ public class MessageBox{
                     }
                 });
 
+
                 messageBox = aBuilder.create();
                 break;
+            case "EQUIPPED_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                final AccountActivity accAct= (AccountActivity) context;
+
+                aBuilder.setCancelable(false);
+
+                if(accAct.getSelectedItem().getIconSource().equals("blank")){
+
+                    aBuilder.setTitle("No item equipped");
+                    aBuilder.setMessage("This spot is empty. \n Equip an item in the Iventory");
+
+                    aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            messageBox.dismiss();
+                        }
+                    });
+                }else{
+                    aBuilder.setTitle(accAct.getSelectedItem().getItemName());
+                    aBuilder.setMessage(accAct.getSelectedItem().getItemDescription());
+
+                    aBuilder.setPositiveButton("UNEQUIP", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            accAct.getPlayer().unEquipItem(accAct.getSelectedItem());
+                        }
+                    });
+                    aBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            messageBox.dismiss();
+                        }
+                    });
+                }
+
+                messageBox = aBuilder.create();
         }
     }
 

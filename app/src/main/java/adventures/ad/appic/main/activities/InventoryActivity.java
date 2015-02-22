@@ -1,5 +1,6 @@
 package adventures.ad.appic.main.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Player;
+import adventures.ad.appic.main.custom.ImageAdapter;
 import adventures.ad.appic.main.custom.MessageBox;
 import adventures.ad.appic.web.Connection;
 
@@ -44,49 +46,55 @@ public class InventoryActivity extends ActionBarActivity {
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
 
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory()));
+        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory(), false));
         setOnclick();
 
     }
 
-    private void setOnclick(){
+    private void setOnclick() {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                Log.d("here", ""+position);
+                Log.d("here", "" + position);
 
                 selectedItem = mPlayer.getInventory().get(position);
                 selectedIndex = position;
 
-                if(!mPlayer.getInventory().get(position).getIconSource().equals("ico04")){
+                if (!mPlayer.getInventory().get(position).getIconSource().equals("ico04")) {
                     new MessageBox(mPlayer.getInventory().get(position).getItemName(), "What do you want to do?", MessageBox.Type.ITEM_BOX, InventoryActivity.this).popMessage();
-                }else{
+                } else {
                     new MessageBox(mPlayer.getInventory().get(position).getItemName(), "Please enter a valid code", MessageBox.Type.VOUCHER_BOX, InventoryActivity.this).popMessage();
                 }
             }
         });
     }
 
-    public Item getSelectedItem(){
+    public Item getSelectedItem() {
         return selectedItem;
     }
 
-    public void useItem(){
-        mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
+    public void useItem() {
         destroyItem();
     }
 
-    public void equipItem(){
-
+    public void equipItem(Item item) {
+        mPlayer.equipItem(item);
     }
 
-    public void destroyItem(){
-        mPlayer.getInventory().remove(mPlayer.getInventory().remove(selectedIndex));
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra("mPlayer", mPlayer);
+        setResult(Activity.RESULT_OK, data);
+        super.onBackPressed();
+    }
+
+    public void destroyItem() {
+        mPlayer.getInventory().remove(selectedIndex);
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory()));
+        gridview.setAdapter(new ImageAdapter(this, mPlayer.getInventory(), false));
         setOnclick();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,76 +124,13 @@ public class InventoryActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void validateCode(String code){
+    public void validateCode(String code) {
         boolean succes = true;
 
         //TODO boolean succes = new Connection().validateVoucher(code);
 
-        if(!succes){
+        if (!succes) {
 
-        }
-
-    }
-
-    public class ImageAdapter extends BaseAdapter {
-        private Context mContext;
-        private Item[] values;
-
-        public ImageAdapter(Context c, ArrayList<Item> inventory) {
-            mContext = c;
-            values = new Item[inventory.size()];
-            values = inventory.toArray(values);
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View gridView;
-
-            if (convertView == null) {
-
-                gridView = new View(mContext);
-
-                // get layout from mobile.xml
-                gridView = inflater.inflate(R.layout.grid_inventory, null);
-
-                // set image based on selected text
-                ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
-
-                Log.d("test: ", ""+ values[position].getIconSource());
-                switch (values[position].getIconSource()) {
-                    case "ico00":
-                        imageView.setImageResource(R.drawable.ico00);
-                        break;
-                    case "ico03":
-                        imageView.setImageResource(R.drawable.ico03);
-                        break;
-                    case "ico04":
-                        imageView.setImageResource(R.drawable.ico04);
-                        break;
-                }
-
-            } else {
-                gridView = (View) convertView;
-            }
-
-            return gridView;
-        }
-
-        @Override
-        public int getCount() {
-            return values.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
         }
 
     }

@@ -7,38 +7,55 @@
     tools:context="adventures.ad.appic.main.activities.AccountActivity"
     android:background="@drawable/back">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/characterImg"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:orientation="horizontal"
+        android:id="@+id/layout">
+        <ImageView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:id="@+id/characterImg"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <GridLayout
-        android:id="@+id/statList"
-        android:layout_alignTop="@id/characterImg"
-        android:layout_marginTop="10dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:columnCount="2"
-        android:rowCount="12">
+        <GridLayout
+            android:id="@+id/statList"
+            android:layout_alignTop="@id/characterImg"
+            android:layout_marginTop="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:columnCount="2"
+            android:rowCount="12">
 
-        <TextView android:id="@+id/statName" android:text="Name:"/>
-        <TextView android:id="@+id/nameStat"/>
-        <TextView android:id="@+id/statLvl" android:text="Level:"/>
-        <TextView android:id="@+id/lvlStat"/>
-        <TextView android:id="@+id/statHealth" android:text="Health:"/>
-        <TextView android:id="@+id/healthStat"/>
-        <TextView android:id="@+id/statAtk" android:text="Attack:"/>
-        <TextView android:id="@+id/atkStat"/>
-        <TextView android:id="@+id/statDef" android:text="Defence:"/>
-        <TextView android:id="@+id/defStat"/>
-        <TextView android:id="@+id/statStam" android:text="Stamina:"/>
-        <TextView android:id="@+id/stamStat"/>
-
+            <TextView android:id="@+id/statName" android:text="Name:"/>
+            <TextView android:id="@+id/nameStat"/>
+            <TextView android:id="@+id/statLvl" android:text="Level:"/>
+            <TextView android:id="@+id/lvlStat"/>
+            <TextView android:id="@+id/statHealth" android:text="Health:"/>
+            <TextView android:id="@+id/healthStat"/>
+            <TextView android:id="@+id/statAtk" android:text="Attack:"/>
+            <TextView android:id="@+id/atkStat"/>
+            <TextView android:id="@+id/statDef" android:text="Defence:"/>
+            <TextView android:id="@+id/defStat"/>
+            <TextView android:id="@+id/statStam" android:text="Stamina:"/>
+            <TextView android:id="@+id/stamStat"/>
 
         </GridLayout>
+    </LinearLayout>
+
+    <GridView
+        android:layout_below="@id/layout"
+        android:id="@+id/armorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:background="@drawable/view_bg"/>
 </RelativeLayout>
