@@ -100,15 +100,12 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void createNewAccount(View view) {
-        Log.e("Userid:",""+user);
-        Log.e("userid:", con.confirmUser(user)+"");
+        Log.e("Userid:",user);
+        //Log.e("userid:", con.confirmUser(user)+"");
         con = new Connection(this);
-        if(con.confirmUser(user) == -1) {
-            new MessageBox("New Account", "Please choose a character name", MessageBox.Type.NEWACCOUNT_BOX, this).popMessage();
-        }
-        else {
-            new MessageBox("New Account", "You already have an character", MessageBox.Type.ERROR_BOX, this).popMessage();
-        }
+     //   Log.e("userid:", con.confirmUser(user)+"");
+
+        new TestTask().execute();
     }
 
     public void changeAccount(View view){
@@ -154,6 +151,27 @@ public class LoginActivity extends FragmentActivity{
 
         con = new Connection(this);
         new CreateFilesTask().execute();
+    }
+
+    private class TestTask extends AsyncTask<Void, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Void... params){
+            Integer trueUser = con.confirmUser(user);
+
+            return trueUser;
+        }
+
+        @Override
+        protected void onPostExecute(Integer i) {
+            //Log.e("userid:", con.confirmUser(user)+"");
+
+            if(i == -1) {
+                new MessageBox("New Account", "Please choose a character name", MessageBox.Type.NEWACCOUNT_BOX, LoginActivity.this).popMessage();
+            }
+            else {
+                new MessageBox("New Account", "You already have an character", MessageBox.Type.MESSAGE_BOX, LoginActivity.this).popMessage();
+            }
+        }
     }
 
     private class CreateFilesTask extends AsyncTask<Void, Void, Void> {
