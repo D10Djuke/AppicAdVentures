@@ -404,7 +404,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
             }
             if (mCreature.getHealth() <= 0) {
                 setHealth("creature");
-                mPlayer.setCurrExp(mPlayer.getCurrExp() + (int)(Math.random()*250));
+                mPlayer.setCurrExp(mPlayer.getCurrExp() + 1 + (int)(Math.random()*25));
                 Log.e("exp: ", mPlayer.getCurrExp()+"");
                 healthZero = true;
                 win();

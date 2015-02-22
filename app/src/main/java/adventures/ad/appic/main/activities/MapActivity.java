@@ -47,7 +47,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
     final int CONNECTIONATTEMPTS = 1000;
-    final int DISTANCE = 5000; //distance in meters
+    final int DISTANCE = 50; //distance in meters
     final int[] c = {0};
     private Intent i = new Intent();
     private Player mPlayer;
@@ -56,6 +56,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private Sensor gs;
     private Sensor orientationSensor;
     private float heading = 0f;
+    private boolean first = true;
 
     /* List circle;
      private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
@@ -69,7 +70,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         con = new Connection(this);
-        new DownloadFilesTask().execute();
+
         sMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gs = sMan.getDefaultSensor(Sensor.TYPE_GRAVITY);
         orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
@@ -122,11 +123,12 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            setUpMapIfNeeded();
             Log.d("post: " , "post");
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            setUpMapIfNeeded();
+
         }
     }
 
@@ -180,8 +182,10 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
         FirstLocation = true;
         sMan.registerListener(this, gs, SensorManager.SENSOR_DELAY_FASTEST);
         sMan.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        //new DownloadFilesTask().execute();
-        setUpMapIfNeeded();
+        if(first) {
+            new DownloadFilesTask().execute();
+            first = false;
+        }
     }
 
     /**
@@ -225,8 +229,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
                             // Getting view from the layout file info_window_layout
                             View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
-                          /*  ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
-                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());*/
+                            ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
+                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());
                             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
                             if (display.getRotation() == Surface.ROTATION_0) {
@@ -259,17 +263,17 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
                             if (mapInit.checkLocationService(locationManager)) {
                                 int currentDistance = (int)mapInit.rangeTo(loc, marker);
                                 if (currentDistance <= DISTANCE) {
-                                   // if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
+                                    if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
                                         Intent i = new Intent(MapActivity.this, CameraActivity.class);
                                         i.putExtra("mPlayer", mPlayer);
                                         i.putExtra("mLoc", loc);
                                         i.putExtra("mMarker", marker.getPosition());
                                         MapActivity.this.startActivityForResult(i, 1);
-                                   /* }
+                                    }
                                         else{
                                             MessageBox message = new MessageBox("Target out of sight", "Please face the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                             message.popMessage();
-                                        }*/
+                                        }
                                 }
                                 else{
                                     MessageBox message = new MessageBox("Target out of range", "You are " + currentDistance + " meters away from the target. \nPlease get within " + DISTANCE + " meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);

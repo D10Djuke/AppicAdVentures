@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -49,10 +50,10 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void login(View view) {
-        /*con = new Connection(this);
-        new DownloadFilesTask().execute();*/
+        con = new Connection(this);
+        new DownloadFilesTask().execute();
 
-        Player dummyPlayer = new Player();
+        /*Player dummyPlayer = new Player();
         dummyPlayer.setCharacterName("Dummy");
         dummyPlayer.setLvl(1);
         dummyPlayer.setAtk(50);
@@ -63,7 +64,7 @@ public class LoginActivity extends FragmentActivity{
 
         createInventory(dummyPlayer);
 
-        login(dummyPlayer);
+        login(dummyPlayer);*/
 
     }
 
@@ -99,7 +100,15 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void createNewAccount(View view) {
-        new MessageBox("New Account", "Please choose a character name", MessageBox.Type.NEWACCOUNT_BOX, this).popMessage();
+        Log.e("Userid:",""+user);
+        Log.e("userid:", con.confirmUser(user)+"");
+        con = new Connection(this);
+        if(con.confirmUser(user) == -1) {
+            new MessageBox("New Account", "Please choose a character name", MessageBox.Type.NEWACCOUNT_BOX, this).popMessage();
+        }
+        else {
+            new MessageBox("New Account", "You already have an character", MessageBox.Type.ERROR_BOX, this).popMessage();
+        }
     }
 
     public void changeAccount(View view){
@@ -109,6 +118,7 @@ public class LoginActivity extends FragmentActivity{
     public void changeUserName(String user){
         TextView t = (TextView) findViewById(R.id.usernameTextView);
         t.setText(user);
+        this.user = user;
     }
 
     public String getUsername() {
@@ -138,13 +148,12 @@ public class LoginActivity extends FragmentActivity{
         startActivity(i);
     }
 
-    public void createNew(String name){
+    public void createNew(String name) {
 
         charName = name;
 
         con = new Connection(this);
         new CreateFilesTask().execute();
-        new DownloadFilesTask().execute();
     }
 
     private class CreateFilesTask extends AsyncTask<Void, Void, Void> {
@@ -155,6 +164,7 @@ public class LoginActivity extends FragmentActivity{
             mProgressDialog.setTitle("Creating");
             mProgressDialog.setMessage("Loading..");
             mProgressDialog.setIndeterminate(false);
+          //  mProgressDialog.setCancelable(false);
             mProgressDialog.show();
         }
 
@@ -179,6 +189,7 @@ public class LoginActivity extends FragmentActivity{
             }
 
             if(trueUser != -1){
+                Log.d("Create", "creating");
                 con.create(userObj, createFlag);
 
                 createFlag = "CHARACTER";
@@ -203,6 +214,7 @@ public class LoginActivity extends FragmentActivity{
             mProgressDialog.setTitle("Getting UserData");
             mProgressDialog.setMessage("Loading..");
             mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setCancelable(false);
             mProgressDialog.show();
         }
 
@@ -233,7 +245,7 @@ public class LoginActivity extends FragmentActivity{
                 new MessageBox("No Account Found", "No account could be found linked to your google-id. \n Please create one.", MessageBox.Type.MESSAGE_BOX,LoginActivity.this).popMessage();
             }
 
-            if(result==null)
+            else if(result==null)
             {
                 new MessageBox("Error", "Result returned null", MessageBox.Type.ERROR_BOX,LoginActivity.this).popMessage();
             }else{
