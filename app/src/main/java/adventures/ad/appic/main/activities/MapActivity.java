@@ -47,8 +47,9 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
     private boolean FirstLocation = true;
     private MapInit mapInit = new MapInit();
     final int CONNECTIONATTEMPTS = 1000;
-    final int DISTANCE = 50; //distance in meters
+    final int DISTANCE = 5000; //distance in meters
     final int[] c = {0};
+    private Intent i = new Intent();
     private Player mPlayer;
     private Connection con = null;
     private SensorManager sMan = null;
@@ -199,7 +200,7 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-        Intent i = new Intent();
+
         if(mapInit.checkLocationService(locationManager)) {
                 // Do a null check to confirm that we have not already instantiated the map.
                 if (mMap == null) {
@@ -224,8 +225,8 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
 
                             // Getting view from the layout file info_window_layout
                             View v = getLayoutInflater().inflate(R.layout.marker_layout, null);
-                            ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
-                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());
+                          /*  ((TextView) v.findViewById(R.id.tvName)).setText(con.getLocation(new LatLng(y, x)).getName());
+                            ((TextView) v.findViewById(R.id.tvAdres)).setText(con.getLocation(new LatLng(y, x)).getAddress());*/
                             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
                             if (display.getRotation() == Surface.ROTATION_0) {
@@ -258,24 +259,23 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
                             if (mapInit.checkLocationService(locationManager)) {
                                 int currentDistance = (int)mapInit.rangeTo(loc, marker);
                                 if (currentDistance <= DISTANCE) {
-                                    if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
+                                   // if (mapInit.isFacing(loc, marker, heading)) { //compass not accurate enough yet
                                         Intent i = new Intent(MapActivity.this, CameraActivity.class);
                                         i.putExtra("mPlayer", mPlayer);
                                         i.putExtra("mLoc", loc);
                                         i.putExtra("mMarker", marker.getPosition());
-                                        MapActivity.this.startActivity(i);
-                                    }
+                                        MapActivity.this.startActivityForResult(i, 1);
+                                   /* }
                                         else{
                                             MessageBox message = new MessageBox("Target out of sight", "Please face the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                             message.popMessage();
-                                        }
+                                        }*/
                                 }
                                 else{
                                     MessageBox message = new MessageBox("Target out of range", "You are " + currentDistance + " meters away from the target. \nPlease get within " + DISTANCE + " meters of the target.", MessageBox.Type.MESSAGE_BOX, MapActivity.this);
                                     message.popMessage();
                                 }
                             } else {
-                                Intent i = new Intent();
                                 i.putExtra("mEvents", "No Signal!");
                                 setResult(RESULT_OK, i);
                                 MessageBox message = new MessageBox("NO SIGNAL", "Can't find GPS signal", MessageBox.Type.TEST_BOX, MapActivity.this);
@@ -299,7 +299,6 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
                         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                             @Override
                             public void onCameraChange(CameraPosition cameraPosition) {
-                                Intent i = new Intent();
                                 if (mMap.getMyLocation() == null) {
                                     if (mapInit.checkLocationService(locationManager)) {
                                         if (!mapInit.testConnection(mMap, CONNECTIONATTEMPTS, c)) {
@@ -340,6 +339,27 @@ public class MapActivity extends FragmentActivity implements LocationListener, S
             setResult(RESULT_OK, i);
             MessageBox message = new MessageBox("NO SIGNAL", "Location Service Disabled", MessageBox.Type.TEST_BOX, MapActivity.this);
             message.popMessage();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        i.putExtra("mPlayer", mPlayer);
+        setResult(RESULT_OK,i);
+        super.onBackPressed();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                mPlayer = data.getParcelableExtra("mPlayer");
+                Log.d("exp: ", mPlayer.getCurrExp()+"");
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
         }
     }
 

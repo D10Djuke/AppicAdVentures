@@ -168,7 +168,7 @@ public class Creature extends Character{
         return (int)damage;
     }
 
-    @Override
+
     public void takeDamage(int damage) {
         currHealth = currHealth - damage;
     }

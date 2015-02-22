@@ -42,11 +42,11 @@ public class MapInit extends FragmentActivity {
         for(int i = 0; i < con.getLocationlist().size(); i++) {
             markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(con.getLocationlist().get(i).getCoordy()), Double.parseDouble(con.getLocationlist().get(i).getCoordx()))).title(con.getLocationlist().get(i).getName())));
         }
-      /*  markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.938288, 5.348595)).title("PXL gebouw B")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.835884, 5.189746)).title("Ergens in St. Truiden")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.855321, 5.383759)).title("Thuis")));
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.856450, 5.381367)).title("Random1")));
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.917033, 5.342780)).title("Random2")));*/
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(50.917033, 5.342780)).title("Random2")));
 
         for (int i = 0; i < markers.size(); i++) {
             markers.get(i).setVisible(false);

@@ -54,10 +54,11 @@ public class LoginActivity extends FragmentActivity{
 
         Player dummyPlayer = new Player();
         dummyPlayer.setCharacterName("Dummy");
-        dummyPlayer.setLvl(9000);
+        dummyPlayer.setLvl(1);
         dummyPlayer.setAtk(50);
         dummyPlayer.setDef(12);
         dummyPlayer.setHitPoints(110);
+        dummyPlayer.setMaxHitPoints(110);
         dummyPlayer.setStam(10);
 
         createInventory(dummyPlayer);

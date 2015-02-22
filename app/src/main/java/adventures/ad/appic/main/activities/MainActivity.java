@@ -84,6 +84,7 @@ public class MainActivity extends ActionBarActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
                 events = data.getStringExtra("mEvents");
+                mPlayer = data.getParcelableExtra("mPlayer");
                 ((TextView) findViewById(R.id.tvEvents)).setText(events);
             }
             if (resultCode == RESULT_CANCELED) {

@@ -14,7 +14,7 @@ public class Character implements Parcelable{
 
     String characterName = "default";
     int hitPoints = 0;
-
+    int maxHitPoints = 0;
     int atk = 0;
     int def = 0;
     int stam = 0;
@@ -31,6 +31,8 @@ public class Character implements Parcelable{
     public void setHitPoints(int hp){
         this.hitPoints = hp;
     }
+
+    public void setMaxHitPoints(int hp) { this.maxHitPoints = hp; }
 
     public void setAtk(int atk){
         this.atk = atk;
@@ -76,6 +78,8 @@ public class Character implements Parcelable{
         return hitPoints;
     }
 
+    public int getMaxHitpoints() { return maxHitPoints;}
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,6 +91,7 @@ public class Character implements Parcelable{
         dest.writeInt(atk);
         dest.writeInt(def);
         dest.writeInt(hitPoints);
+        dest.writeInt(maxHitPoints);
         dest.writeInt(lvl);
         dest.writeString(characterName);
     }
@@ -96,6 +101,7 @@ public class Character implements Parcelable{
         atk = in.readInt();
         def = in.readInt();
         hitPoints = in.readInt();
+        maxHitPoints = in.readInt();
         lvl = in.readInt();
         characterName = in.readString();
     }
