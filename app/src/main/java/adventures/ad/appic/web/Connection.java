@@ -20,7 +20,9 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -48,13 +50,13 @@ public class Connection {
     String url;
     String input;
     JSONArray locations = null;
-    JSONObject user = null;
-    JSONObject player = null;
+    JSONArray users = null;
 
     ArrayList<Location> locationList = new ArrayList<>();
     Player mPlayer;
 
     Context c;
+    private JSONArray players;
 
     public Connection(Context c){
         this.c = c;
@@ -93,8 +95,20 @@ public class Connection {
             String read = readServiceWithParam("goodleID", userName);
             Log.d("test3: " , "tralala");
             if(read != null){
-                user = new JSONObject(read);
-                trueUser = user.getInt("userId");
+                Log.d("test3: " , ""+read);
+                users = new JSONArray(read);
+                for (int i = 0; i < users.length(); i++) {
+                        JSONObject c = users.getJSONObject(i);
+                    Log.e("iddatabase", c.getString("googleID"));
+                    Log.e("idApp", userName);
+                        if (c.getString("googleID").equals(userName)) {
+                        trueUser = c.getInt("userId");
+                        break;
+                    }
+                    else {
+
+                    }
+                }
             }
             Log.d("test4: " , "pfffffffffffffffff");
         }catch (Exception e) {
@@ -131,12 +145,22 @@ public class Connection {
             String read = readServiceWithParam("userId", Integer.toString(userId));
 
             if(read != null){
-                player = new JSONObject(read);
-
-                mPlayer = new Player();
-                mPlayer.setCharacterName(player.getString("name"));
-                mPlayer.setLvl(player.getInt("level"));
-                mPlayer.setCurrExp(player.getInt("exp"));
+                players = new JSONArray(read);
+                for (int i = 0; i < players.length(); i++) {
+                    JSONObject c = players.getJSONObject(i);
+                    Log.e("iddatabase", c.getString("userId"));
+                    Log.e("idApp", userId+"");
+                    if (c.getInt("userId") == userId) {
+                        mPlayer = new Player();
+                        mPlayer.setCharacterName(c.getString("name"));
+                        mPlayer.setLvl(c.getInt("level"));
+                        mPlayer.setCurrExp(c.getInt("exp"));
+                        mPlayer.setMaxHitPoints(c.getInt("maxHitpoints"));
+                        mPlayer.setAtk(c.getInt("attack"));
+                        mPlayer.setDef(c.getInt("defence"));
+                        mPlayer.setHitPoints(c.getInt("hitpoints"));
+                    }
+                }
             }
         }catch (Exception e){
             //new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
@@ -170,6 +194,7 @@ public class Connection {
                 if(read != "no connection") {
 
                     locations = new JSONArray(read);
+                    Log.e("locations size: ", locations.length()+"");
                     for (int i = 0; i < locations.length(); i++) {
                         JSONObject c = locations.getJSONObject(i);
 
@@ -312,12 +337,13 @@ public class Connection {
         HttpPost request = new HttpPost(url);
 
         try{
+            Log.e("insert", "hier");
             StringEntity s = new StringEntity(o.toString());
-            s.setContentEncoding("UTF-8");
-            s.setContentType("application/json");
+            s.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+            s.setContentType("application/json;charset=UTF-8");
 
             request.setEntity(s);
-            request.addHeader("accept", "application/json");
+          //  request.addHeader("accept", "application/json");
 
             client.execute(request);
 
