@@ -349,74 +349,86 @@ public class MessageBox{
 
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-
                                 invAct2.useItem();
                                 messageBox.dismiss();
                         }
                     });
-                }else{
+                }else if(!invAct2.getSelectedItem().isEquipped()) {
                     aBuilder.setPositiveButton("EQUIP", new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-
-                                invAct2.equipItem(invAct2.getSelectedItem());
-                                messageBox.dismiss();
+                            invAct2.equipItem(invAct2.getSelectedItem());
+                            messageBox.dismiss();
                         }
                     });
+
+                    aBuilder.setNegativeButton("DESTROY", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            invAct2.destroyItem();
+                            messageBox.dismiss();
+                        }
+                    });
+
                 }
+                    messageBox = aBuilder.create();
+                    break;
+                    case "EQUIPPED_BOX":
+                        aBuilder = new AlertDialog.Builder(context);
+                        final AccountActivity accAct = (AccountActivity) context;
 
-                aBuilder.setNegativeButton("DESTROY", new DialogInterface.OnClickListener() {
+                        aBuilder.setCancelable(false);
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        invAct2.destroyItem();
-                        messageBox.dismiss();
-                    }
-                });
+                        if (accAct.getSelectedItem().getIconSource().equals("blank")) {
 
+                            aBuilder.setTitle("No item equipped");
+                            aBuilder.setMessage("This spot is empty. \n Equip an item in the Iventory");
 
+                            aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    messageBox.dismiss();
+                                }
+                            });
+                        } else {
+                            aBuilder.setTitle(accAct.getSelectedItem().getItemName());
+                            aBuilder.setMessage(accAct.getSelectedItem().getItemDescription());
+
+                            aBuilder.setPositiveButton("UNEQUIP", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    accAct.unEquipItem(accAct.getSelectedItem());
+                                    messageBox.dismiss();
+                                }
+                            });
+                            aBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    messageBox.dismiss();
+                                }
+                            });
+                        }
+
+                        messageBox = aBuilder.create();
+                        break;
+            case "CHARIMG_BOX":
+                aBuilder = new AlertDialog.Builder(context);
+                final AccountActivity accAct2 = (AccountActivity) context;
+
+                aBuilder.setMessage(s);
+                aBuilder.setTitle(title);
+                aBuilder.setCancelable(true);
+
+                LayoutInflater inflater8 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                dialogView2 = inflater8.inflate(R.layout.dialog_charimg, null);
+                aBuilder.setView(dialogView2);
                 messageBox = aBuilder.create();
                 break;
-            case "EQUIPPED_BOX":
-                aBuilder = new AlertDialog.Builder(context);
-                final AccountActivity accAct= (AccountActivity) context;
-
-                aBuilder.setCancelable(false);
-
-                if(accAct.getSelectedItem().getIconSource().equals("blank")){
-
-                    aBuilder.setTitle("No item equipped");
-                    aBuilder.setMessage("This spot is empty. \n Equip an item in the Iventory");
-
-                    aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            messageBox.dismiss();
-                        }
-                    });
-                }else{
-                    aBuilder.setTitle(accAct.getSelectedItem().getItemName());
-                    aBuilder.setMessage(accAct.getSelectedItem().getItemDescription());
-
-                    aBuilder.setPositiveButton("UNEQUIP", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            accAct.getPlayer().unEquipItem(accAct.getSelectedItem());
-                        }
-                    });
-                    aBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            messageBox.dismiss();
-                        }
-                    });
-                }
-
-                messageBox = aBuilder.create();
         }
     }
 
@@ -435,6 +447,10 @@ public class MessageBox{
                 arr.add(parts[0]);
             }
         }
+    }
+
+    public void killMessage(){
+        messageBox.dismiss();;
     }
 
     public void popMessage(){

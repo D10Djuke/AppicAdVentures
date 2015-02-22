@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import adventures.ad.appic.game.Creature;
 import adventures.ad.appic.game.Item;
 import adventures.ad.appic.game.Location;
 
@@ -56,7 +57,9 @@ public class Connection {
     Player mPlayer;
 
     Context c;
-    private JSONArray players;
+    JSONArray players;
+    JSONArray inventory;
+    JSONArray beasts;
 
     public Connection(Context c){
         this.c = c;
@@ -121,21 +124,32 @@ public class Connection {
 
     public ArrayList<Item> getInventory(int userId){
 
-        ArrayList<Item> inventory = new ArrayList<>();
+        ArrayList<Item> inventoryList = new ArrayList<>();
 
-        url = serverURL + "get/Inventory";
+        url = serverURL + "get/Inventories";
+
         try{
-            //TODO write body
-
-
-
-
-
+            String read = readService();
+            if(read != null){
+                inventory = new JSONArray(read);
+                for (int i = 0; i < inventory.length(); i++) {
+                    JSONObject c = inventory.getJSONObject(i);
+                    if (c.getInt("characterId") == userId) {
+                        Item item = new Item();
+                        item.setItemID(c.getString("iteId"));
+                        item.setItemDescription(c.getString("description"));
+                        item.setItemName(c.getString("name"));
+                        item.setIconSource();
+                        item.setType(c.getString("type"));
+                        inventoryList.add(item);
+                    }
+                }
+            }
         }catch (Exception e){
 
         }
 
-        return inventory;
+        return inventoryList;
 
     }
 
@@ -182,6 +196,40 @@ public class Connection {
                 insertService(obj);
                 break;
         }
+    }
+
+    public Creature getCreature(int locid){
+        url = serverURL + "get/Beasts";
+        Creature creature = null;
+        try {
+            String read = readService();
+
+
+
+            if(read != null)
+            {
+                if(read != "no connection") {
+
+                    beasts = new JSONArray(read);
+                    for (int i = 0; i < beasts.length(); i++) {
+                        JSONObject c = locations.getJSONObject(i);
+
+                        creature = new Creature();
+                        creature.setCharacterName(c.getString("name"));
+                        creature.setHitPoints(c.getInt("hp"));
+                    }
+                }
+                else{
+
+                    Log.d("testend: " , "testend");
+                }
+            }
+        } catch (Exception e) {
+
+//            new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, c).popMessage();
+        }
+
+        return creature;
     }
 
     public void getLocations(){
@@ -340,7 +388,7 @@ public class Connection {
         try{
             Log.e("insert", "hier");
             StringEntity s = new StringEntity(o.toString());
-            s.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+            s.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
             s.setContentType("application/json;charset=UTF-8");
 
             request.setEntity(s);

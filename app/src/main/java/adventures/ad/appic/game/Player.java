@@ -11,10 +11,11 @@ import java.util.Arrays;
  */
 public class Player extends Character implements Parcelable {
 
-    private int currExp = 0;
+    private double currExp = 0;
     private ArrayList<Item> inventory;
-    private Item[] equippedItems = new Item[12];
+    //private Item[] equippedItems = new Item[12];
     private ArrayList<Item> armory = new ArrayList<Item>();
+    private int charImgID;
 
     private Item weaponItem = null;
     private Item offHeldItem = null;
@@ -25,6 +26,7 @@ public class Player extends Character implements Parcelable {
     private Item shoulderItem = null;
     private Item trinketItem = null;
     private Item relicItem = null;
+    private Item handItem = null;
 
 
     private ArrayList<String> stats  = new ArrayList<>(9);
@@ -32,17 +34,16 @@ public class Player extends Character implements Parcelable {
     public Player(){
         for(int i = 0; i<12;i++){
             Item item = new Item("blank");
-            equippedItems[i] = item;
+            armory.add(item);
         }
-
-        armory = new ArrayList<Item>(Arrays.asList(equippedItems));
+        //armory = new ArrayList<Item>(Arrays.asList(equippedItems));
     }
 
-    public int getCurrExp(){
+    public double getCurrExp(){
         return currExp;
     }
 
-    public void setCurrExp(int currExp){
+    public void setCurrExp(double currExp){
         this.currExp = currExp;
     }
 
@@ -69,24 +70,76 @@ public class Player extends Character implements Parcelable {
         return damage;
     }
 
+    public void setCharImgID(int id){
+        this.charImgID = id;
+    }
+
+    public int getCharImgID(){
+        return  charImgID;
+    }
+
     public void equipItem(Item item){
-        Item it = item;
         switch(item.getItemType()){
+            case "RELIC":
+                relicItem = item;
+                armory.set(0,item);
+                break;
+            case "HEAD":
+                headItem = item;
+                armory.set(1,item);
+                break;
+            case "TRINKET":
+                trinketItem = item;
+                armory.set(2,item);
+                break;
+            case "SHOULDER":
+                shoulderItem = item;
+                armory.set(3,item);
+                armory.set(5,item);
+                break;
             case "BODY":
-                    bodyItem = item;
-                    equippedItems[4] = item;
+                bodyItem = item;
+                armory.set(4,item);
+                break;
+            case "HAND":
+                handItem = item;
+                armory.set(6,item);
+                armory.set(8,item);
+                break;
+            case "LEGS":
+                legsItem = item;
+                armory.set(7,item);
                 break;
             case "WEAPON":
                 weaponItem = item;
-                equippedItems[9] = item;
+                armory.set(9,item);
+                break;
+            case "FEET":
+                feetItem = item;
+                armory.set(10,item);
+                break;
+            case "OFFHELD":
+                offHeldItem = item;
+                armory.set(11,item);
                 break;
         }
-
-        armory = new ArrayList<Item>(Arrays.asList(equippedItems));
     }
 
-    public void unEquipItem(Item item){
+    public void unEquipItem(int position, Item item){
+        armory.set(position, new Item("blank"));
 
+        if(position == 6){
+            armory.set(8, new Item("blank"));
+        }
+        if(position == 3){
+            armory.set(5, new Item("blank"));
+        }
+
+        for(Item i : inventory){
+            if(i.getItemID().equals(item.getItemID())){
+                i.setEquipped(false);
+            }
+        }
     }
 
     public ArrayList<Item> getEquippedItems(){
@@ -108,14 +161,16 @@ public class Player extends Character implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeList(inventory);
         dest.writeList(armory);
-        dest.writeInt(currExp);
+        dest.writeDouble(currExp);
+        dest.writeInt(charImgID);
     }
 
     public void readFromParcel(Parcel in) {
         super.readFromParcel(in);
         inventory = in.readArrayList(getClass().getClassLoader());
         armory = in.readArrayList(getClass().getClassLoader());
-        currExp = in.readInt();
+        currExp = in.readDouble();
+        charImgID = in.readInt();
     }
 
     public Player(Parcel in){

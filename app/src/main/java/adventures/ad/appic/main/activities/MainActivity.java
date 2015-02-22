@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import adventures.ad.appic.app.R;
@@ -24,18 +25,27 @@ public class MainActivity extends ActionBarActivity {
     private Player mPlayer;
     private String events;
 
+    private ImageView imgView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        //mDataMan = (DataManager) intent.getParcelableExtra("mDataMan");
+
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
 
         if(true) {
 
             setContentView(R.layout.activity_main);
+
+            imgView = (ImageView) findViewById(R.id.charHead);
+            String imgName = "img_char_head" + mPlayer.getCharImgID();
+            int resId = getResources().getIdentifier(imgName, "drawable", getPackageName());
+
+            imgView.setBackgroundResource(resId);
+
             ((TextView) findViewById(R.id.charName)).setText(mPlayer.getCharacterName());
             ((TextView) findViewById(R.id.charLvl)).setText(Integer.toString(mPlayer.getLvl()));
 
@@ -88,6 +98,12 @@ public class MainActivity extends ActionBarActivity {
                 mPlayer = data.getParcelableExtra("mPlayer");
                 ((TextView) findViewById(R.id.tvEvents)).setText(events);
                 mPlayer = (Player) data.getParcelableExtra("mPlayer");
+
+                String imgName = "img_char_head" + mPlayer.getCharImgID();
+                int resId = getResources().getIdentifier(imgName, "drawable", getPackageName());
+
+                imgView.setBackgroundResource(resId);
+
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result

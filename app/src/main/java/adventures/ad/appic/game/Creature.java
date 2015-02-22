@@ -49,6 +49,16 @@ public class Creature extends Character{
         NATURE
     }
 
+    public Creature(){
+
+    }
+
+    public void init(){
+        setBaseStats();
+        levelWithPlayer(target.getLvl());
+        currHealth = getHealth();
+    }
+
     public Creature(Dificulity diff, String name, Player target, Element element){
         this.name = name;
         this.diff = diff;

@@ -60,6 +60,8 @@ public class LoginActivity extends FragmentActivity{
         dummyPlayer.setHitPoints(110);
         dummyPlayer.setMaxHitPoints(110);
         dummyPlayer.setStam(10);
+        dummyPlayer.setCurrExp(40);
+        dummyPlayer.setCharImgID(1);
 
         createInventory(dummyPlayer);
 
@@ -76,18 +78,21 @@ public class LoginActivity extends FragmentActivity{
         i1.setItemName("Zwaard");
         i1.setItemDescription("een zwaard");
         i1.setType("00");
+        i1.setItemID("ADR15");
         i1.setIconSource();
 
         Item i2 = new Item();
         i2.setItemName("Voucher");
         i2.setItemDescription("een voucher");
         i2.setType("04");
+        i2.setItemID("A556F");
         i2.setIconSource();
 
         Item i3 = new Item();
         i3.setItemName("Potion");
         i3.setItemDescription("een potion");
         i3.setType("03");
+        i3.setItemID("AF8F5");
         i3.setIconSource();
 
         ArrayList<Item> inv = new ArrayList<>();
@@ -99,6 +104,8 @@ public class LoginActivity extends FragmentActivity{
     }
 
     public void createNewAccount(View view) {
+        //Log.e("Userid:",""+user);
+        //Log.e("userid:", con.confirmUser(user)+"");
         Log.e("Userid:",user);
         //Log.e("userid:", con.confirmUser(user)+"");
         con = new Connection(this);
@@ -242,11 +249,7 @@ public class LoginActivity extends FragmentActivity{
 
             if(trueUser >= 0) {
                 result = con.getPlayer(trueUser);
-
-
-                /*TODO getPlayerInventory
-                    result.setInventory(con.getInventory(trueUser));
-                 */
+                result.setInventory(con.getInventory(trueUser));
 
             }else{
                 mProgressDialog.dismiss();

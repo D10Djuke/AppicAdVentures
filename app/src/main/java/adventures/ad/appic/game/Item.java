@@ -15,6 +15,8 @@ public class Item implements Parcelable{
 
     private Image icon;
 
+    private boolean isEquipped;
+
     private String iconSource;
     private String itemID;
     private String itemName;
@@ -26,6 +28,14 @@ public class Item implements Parcelable{
 
     public Item(){
 
+    }
+
+    public void setEquipped(boolean isEquipped){
+        this.isEquipped = isEquipped;
+    }
+
+    public boolean isEquipped(){
+        return isEquipped;
     }
 
     public Item(String iconSource){
@@ -61,6 +71,14 @@ public class Item implements Parcelable{
 
     public void setItemDescription(String itemDescription){
         this.itemDescription = itemDescription;
+    }
+
+    public String getItemID(){
+        return itemID;
+    }
+
+    public void setItemID(String itemID){
+        this.itemID = itemID;
     }
 
     public String getIconSource(){
@@ -114,6 +132,7 @@ public class Item implements Parcelable{
         dest.writeString(itemDescription);
         dest.writeString(itemType);
         dest.writeString(type);
+        dest.writeByte((byte) (isEquipped ? 1 : 0));
     }
 
     private void readFromParcel(Parcel in) {
@@ -123,6 +142,7 @@ public class Item implements Parcelable{
         itemDescription = in.readString();
         itemType = in.readString();
         type = in.readString();
+        isEquipped = in.readByte() != 0;
     }
 
     public Item(Parcel in){

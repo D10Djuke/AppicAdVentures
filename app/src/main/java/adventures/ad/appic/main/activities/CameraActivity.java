@@ -39,6 +39,7 @@ import adventures.ad.appic.game.Creature;
 import adventures.ad.appic.game.Player;
 import adventures.ad.appic.main.custom.AR;
 import adventures.ad.appic.main.custom.MessageBox;
+import adventures.ad.appic.web.Connection;
 
 public class CameraActivity extends Activity implements SensorEventListener {
     private SurfaceView preview = null;
@@ -87,7 +88,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
         sMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         orientationSensor = sMan.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-        mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
+        //mCreature = new Creature(Creature.Dificulity.HARD, "hugbear", mPlayer, Creature.Element.FIRE);
+        //mCreature = new Connection(getApplicationContext()).getCreature(0);
 
         animationImage = (ImageView) findViewById(R.id.animationView);
         attackAnimation = mCreature.setAttackAnimation(getApplicationContext());

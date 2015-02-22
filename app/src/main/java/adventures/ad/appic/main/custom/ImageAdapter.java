@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 import adventures.ad.appic.app.R;
 import adventures.ad.appic.game.Item;
+import adventures.ad.appic.main.activities.InventoryActivity;
 
 /**
  * Created by Jory on 21/02/2015.
@@ -89,16 +92,24 @@ public class ImageAdapter extends BaseAdapter {
                             }
 
                     imageView.setImageBitmap(backImg);
+                    if(values[position].isEquipped()){
+                        imageView.setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+                    }
 
                 }else {
 
                     gridView = inflater.inflate(R.layout.grid_inventory, null);
                     ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
 
-
                     switch (values[position].getIconSource()) {
                         case "ico00":
                             imageView.setImageResource(R.drawable.ico00);
+                            break;
+                        case "ico01":
+                            imageView.setImageResource(R.drawable.ico01);
+                            break;
+                        case "ico02":
+                            imageView.setImageResource(R.drawable.ico02);
                             break;
                         case "ico03":
                             imageView.setImageResource(R.drawable.ico03);
@@ -106,6 +117,34 @@ public class ImageAdapter extends BaseAdapter {
                         case "ico04":
                             imageView.setImageResource(R.drawable.ico04);
                             break;
+                        case "ico05":
+                            imageView.setImageResource(R.drawable.ico05);
+                            break;
+                        case "ico06":
+                            imageView.setImageResource(R.drawable.ico06);
+                            break;
+                        case "ico07":
+                            imageView.setImageResource(R.drawable.ico07);
+                            break;
+                        case "ico08":
+                            imageView.setImageResource(R.drawable.ico08);
+                            break;
+                        case "ico09":
+                            imageView.setImageResource(R.drawable.ico09);
+                            break;
+                        case "ico10":
+                            imageView.setImageResource(R.drawable.ico10);
+                            break;
+                        case "ico11":
+                            imageView.setImageResource(R.drawable.ico11);
+                            break;
+                        case "ico12":
+                            imageView.setImageResource(R.drawable.ico12);
+                            break;
+                    }
+
+                    if(values[position].isEquipped()){
+                        imageView.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
                     }
                 }
 

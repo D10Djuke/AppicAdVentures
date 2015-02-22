@@ -2,6 +2,7 @@ package adventures.ad.appic.main.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,7 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.plus.model.people.Person;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,16 +37,42 @@ public class AccountActivity extends ActionBarActivity {
     private Item selectedItem;
     private int selectedIndex;
 
+    private ImageView imgView;
+
+    private ProgressBar expBar;
+    private MessageBox mBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         Intent intent = getIntent();
 
-        ImageView imgView = (ImageView) findViewById(R.id.characterImg);
-        imgView.setBackgroundResource(R.drawable.img_char_head1);
-
         mPlayer = (Player) intent.getParcelableExtra("mPlayer");
+
+        imgView = (ImageView) findViewById(R.id.characterImg);
+        String headimg = "img_char_head" + mPlayer.getCharImgID();
+        int resId = getResources().getIdentifier(headimg, "drawable", getPackageName());
+
+        imgView.setBackgroundResource(resId);
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBox = new MessageBox("Choose your character", "Click on an image to pick a img", MessageBox.Type.CHARIMG_BOX, AccountActivity.this);
+                mBox.popMessage();
+            }
+        });
+
+        expBar = (ProgressBar) findViewById(R.id.expbar);
+
+        double maxExp = 100*mPlayer.getLvl();
+
+        expBar.setProgress((int) ((mPlayer.getCurrExp()/maxExp)*100));
+
+        TextView expText = (TextView) findViewById(R.id.expView);
+        expText.setText(((int)mPlayer.getCurrExp() + "/" + (100* mPlayer.getLvl())));
+        expText.setTextColor(Color.WHITE);
+        expText.setTextSize(25);
 
         gridview = (GridView) findViewById(R.id.armorView);
 
@@ -52,6 +82,23 @@ public class AccountActivity extends ActionBarActivity {
         setOnclick();
 
         loadStats();
+    }
+
+    public void changeCharImg(View v){
+
+        mBox.killMessage();
+
+        mPlayer.setCharImgID(Integer.parseInt(v.getTag().toString()));
+
+        String headimg = "img_char_head" + mPlayer.getCharImgID();
+        int resId = getResources().getIdentifier(headimg, "drawable", getPackageName());
+
+        imgView.setBackgroundResource(resId);
+    }
+
+    public void unEquipItem(Item item){
+        item.setEquipped(false);
+        mPlayer.unEquipItem(getSelectedIndex(), item);
     }
 
     private void setOnclick() {
@@ -78,6 +125,10 @@ public class AccountActivity extends ActionBarActivity {
         return selectedItem;
     }
 
+    public int getSelectedIndex(){
+        return selectedIndex;
+    }
+
     public Player getPlayer(){
         return mPlayer;
     }
@@ -92,7 +143,6 @@ public class AccountActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.stamStat)).setText(Integer.toString(mPlayer.getStam()));
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
