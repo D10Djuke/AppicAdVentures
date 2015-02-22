@@ -56,6 +56,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
     private AnimationDrawable anim;
 
     private ProgressBar bar;
+    private ProgressBar bar1;
 
     private float xOff = 0;
     private float yOff = 0;
@@ -227,6 +228,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onBackPressed() {
+        Intent i = new Intent();
+
+        i.putExtra("mPlayer", mPlayer);
+        setResult(RESULT_OK,i);
         new MessageBox("You Coward", "Do you really want to flee?", MessageBox.Type.FLEE_BOX, this).popMessage();
     }
 
@@ -286,13 +291,36 @@ public class CameraActivity extends Activity implements SensorEventListener {
         bar.setProgress(100);
         bar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
 
+        double currHealth = mPlayer.getHitPoints();
+        double maxHealth = mPlayer.getMaxHitpoints();
+
+        bar1 = (ProgressBar) findViewById(R.id.progressBar1);
+        bar1.setMax(100);
+        bar1.setProgress((int) ((currHealth / maxHealth) * 100));
+        bar1.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+
+
     }
 
-    private void setHealth() {
-        double currHealth = mCreature.getHealth();
-        double maxHealth = mCreature.getStat(0);
+    private void setHealth(String character) {
+        double currHealth;
+        double maxHealth;
+        switch (character) {
+            case "player":
 
-        bar.setProgress((int) ((currHealth / maxHealth) * 100));
+                currHealth = mPlayer.getHitPoints();
+                maxHealth = mPlayer.getMaxHitpoints();
+
+                bar1.setProgress((int) ((currHealth / maxHealth) * 100));
+                break;
+            case "creature":
+
+                currHealth = mCreature.getHealth();
+                maxHealth = mCreature.getStat(0);
+
+                bar.setProgress((int) ((currHealth / maxHealth) * 100));
+                break;
+        }
     }
 
     private void attackPlayer() {
@@ -300,14 +328,42 @@ public class CameraActivity extends Activity implements SensorEventListener {
             int damageDone = mCreature.dealDamage(mPlayer);
             if (damageDone > 0) {
                 mPlayer.takeDamage(damageDone);
+                final Toast toast = Toast.makeText(getApplicationContext(), Integer.toString(damageDone), Toast.LENGTH_SHORT);
+                Log.d("top: ", Gravity.TOP + "");
+                Log.d("mid: ", Gravity.CENTER_VERTICAL + "");
+                Log.d("bot: ", Gravity.BOTTOM + "");
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL,0,400);
+                toast.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 200);
+            }
+            else {
+                final Toast toast = Toast.makeText(getApplicationContext(), "miss", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.START | Gravity.CENTER_VERTICAL,(int)xOff,(int)yOff);
+                toast.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 200);
             }
 
             Log.e("hp: " , ""+mPlayer.getHitPoints());
             if (mPlayer.getHitPoints() <= 0) {
+                setHealth("player");
                 mPlayer.setHitPoints(0);
                 loss();
             } else {
-                //setHealth();
+                setHealth("player");
             }
         }
 
@@ -347,22 +403,35 @@ public class CameraActivity extends Activity implements SensorEventListener {
                 }, 200);
             }
             if (mCreature.getHealth() <= 0) {
+                setHealth("creature");
+                mPlayer.setCurrExp(mPlayer.getCurrExp() + (int)(Math.random()*250));
+                Log.e("exp: ", mPlayer.getCurrExp()+"");
                 healthZero = true;
                 win();
             } else {
-                setHealth();
+                setHealth("creature");
                 attackPlayer();
             }
         }
     }
 
     public void win() {
+        mPlayer.setHitPoints(mPlayer.getMaxHitpoints());
+        Intent i = new Intent();
+
+        i.putExtra("mPlayer", mPlayer);
+        setResult(RESULT_OK,i);
         MessageBox messagebox = new MessageBox("YOU WIN!", "Victory!", MessageBox.Type.VICTORY_BOX, this);
         messagebox.setPlayer(mPlayer);
         messagebox.popMessage();
     }
 
     public void loss() {
+        mPlayer.setHitPoints(mPlayer.getMaxHitpoints());
+        Intent i = new Intent();
+
+        i.putExtra("mPlayer", mPlayer);
+        setResult(RESULT_OK,i);
         MessageBox messagebox = new MessageBox("YOU LOSE!", "Defeat!", MessageBox.Type.DEFEAT_BOX, this);
         messagebox.setPlayer(mPlayer);
         messagebox.popMessage();
