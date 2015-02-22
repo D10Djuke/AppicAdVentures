@@ -212,7 +212,7 @@ public class LoginActivity extends FragmentActivity{
                 //new MessageBox(MessageBox.Type.STANDARD_ERROR_BOX, LoginActivity.this).popMessage();
             }
 
-            if(trueUser != -1){
+            if(trueUser == -1){
                 Log.d("Create", "creating");
                 con.create(userObj, createFlag);
 
